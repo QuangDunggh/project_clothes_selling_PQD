@@ -1,0 +1,58 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="modal-create">
+    <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal Create</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="frmCreate">
+                        <div class="row mt-3">
+                            <div class="col-md-6 mb-3">
+                                <label for="nameProductCreate" class="form-label">Name drinks</label>
+                                <input type="text" class="form-control" id="nameProductCreate" name="nameProductCreate">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="priceCreate" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="priceCreate" name="priceCreate">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="col-sm-12 col-form-label">Category</label>
+                                <div class="col-sm-6">
+                                    <select class="form-select" id="category" name="category"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="descriptionCreate" class="form-label">Description</label>
+                                <textarea type="tel" class="form-control" id="descriptionCreate" name="descriptionCreate"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <section>
+                                    <div class="wrapper">
+                                        <div class="file-name">
+                                           <label>Chọn hình ảnh cho sản phẩm:</label> <br/>
+                                            <input type="file" id="imageFile" accept="image/jpeg, image/png"/>
+                                        </div>
+                                    </div>
+
+                                </section>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="btnCreate" class="btn btn-outline-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
