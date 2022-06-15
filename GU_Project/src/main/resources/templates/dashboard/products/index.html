@@ -2,335 +2,826 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GU</title>
-    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/assets/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--    <meta charset="UTF-8">-->
+    <!--    <meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <!--    <title>GU</title>-->
+    <!--    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">-->
+    <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">-->
+    <!--    <link rel="stylesheet" href="/assets/css/dataTables.bootstrap5.min.css">-->
+    <!--    <link rel="stylesheet" href="/assets/css/style.css">-->
+
+    <th:block th:include="dashboard/layout/head :: head "/>
 
 </head>
 
 <body>
-    <!-- top navigation bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
-                aria-controls="offcanvasExample">
-                <span class="navbar-toggler-icon" data-bs-target="#sidebar"></span>
-            </button>
-            <a class="navbar-brand me-auto ms-lg-0 ms-3 text-uppercase fw-bold" href="#">GU</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavBar"
-                aria-controls="topNavBar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="topNavBar">
-                <form class="d-flex ms-auto my-3 my-lg-0">
-                    <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" />
-                        <button class="btn btn-primary" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle ms-2" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="bi bi-person-fill"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+<!-- navbar-->
+<th:block th:insert="dashboard/layout/navbar :: navbar"/>
+<!-- navbar-->
+
+<main class="mt-5 pt-3">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Dashboard</h4>
             </div>
         </div>
-    </nav>
-    <!-- top navigation bar -->
-    <!-- offcanvas -->
-    <div class="offcanvas offcanvas-start sidebar-nav bg-dark" tabindex="-1" id="sidebar">
-        <div class="offcanvas-body p-0">
-            <nav class="navbar-dark">
-                <ul class="navbar-nav">
-                    <li>
-                        <div class="text-muted small fw-bold text-uppercase px-3">
-                            CORE
-                        </div>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-3 active">
-                            <span class="me-2"><i class="bi bi-speedometer2"></i></span>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="my-4">
-                        <hr class="dropdown-divider bg-light" />
-                    </li>
-                    <li>
-                        <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
-                            Manager product
-                        </div>
-                    </li>
-                    <li>
-                        <a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#productManager">
-                            <span class="me-2"><i class="bi bi-layout-split"></i></span>
-                            <span>Product</span>
-                            <span class="ms-auto">
-                                <span class="right-icon">
-                                    <i class="bi bi-chevron-down"></i>
-                                </span>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="card bg-primary text-white h-100">
+                    <div class="card-body py-5">Doanh số theo năm</div>
+                    <div class="card-footer d-flex">
+                        View Details
+                        <span class="ms-auto">
+                                <i class="bi bi-chevron-right"></i>
                             </span>
-                        </a>
-                        <div class="collapse" id="productManager">
-                            <ul class="navbar-nav ps-3">
-                                <li>
-                                    <a href="#" class="nav-link px-3">
-                                        <span class="me-2"><i class="bi bi-speedometer2"></i></span>
-                                        <span>Add new product</span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#categoryManager">
-                            <span class="me-2"><i class="bi bi-layout-split"></i></span>
-                            <span>Category</span>
-                            <span class="ms-auto">
-                                <span class="right-icon">
-                                    <i class="bi bi-chevron-down"></i>
-                                </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-warning text-dark h-100">
+                    <div class="card-body py-5">Doanh số theo quý</div>
+                    <div class="card-footer d-flex">
+                        View Details
+                        <span class="ms-auto">
+                                <i class="bi bi-chevron-right"></i>
                             </span>
-                        </a>
-                        <div class="collapse" id="categoryManager">
-                            <ul class="navbar-nav ps-3">
-                                <li>
-                                    <a href="#" class="nav-link px-3">
-                                        <span class="me-2"><i class="bi bi-speedometer2"></i></span>
-                                        <span>Add new category</span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#subcategoryManager">
-                            <span class="me-2"><i class="bi bi-layout-split"></i></span>
-                            <span>Subcategory</span>
-                            <span class="ms-auto">
-                                <span class="right-icon">
-                                    <i class="bi bi-chevron-down"></i>
-                                </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-success text-white h-100">
+                    <div class="card-body py-5">Doanh số theo tháng</div>
+                    <div class="card-footer d-flex">
+                        View Details
+                        <span class="ms-auto">
+                                <i class="bi bi-chevron-right"></i>
                             </span>
-                        </a>
-                        <div class="collapse" id="subcategoryManager">
-                            <ul class="navbar-nav ps-3">
-                                <li>
-                                    <a href="#" class="nav-link px-3">
-                                        <span class="me-2"><i class="bi bi-speedometer2"></i></span>
-                                        <span>Add new subcategory</span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#layouts">
-                            <span class="me-2"><i class="bi bi-layout-split"></i></span>
-                            <span>Stocks</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-3">
-                            <span class="me-2"><i class="bi bi-book-fill"></i></span>
-                            <span>Pages</span>
-                        </a>
-                    </li>
-                    <li class="my-4">
-                        <hr class="dropdown-divider bg-light" />
-                    </li>
-                    <li>
-                        <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
-                            Manager order
-                        </div>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-3">
-                            <span class="me-2"><i class="bi bi-graph-up"></i></span>
-                            <span>Orders</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-danger text-white h-100">
+                    <div class="card-body py-5">Doanh số theo ngày</div>
+                    <div class="card-footer d-flex">
+                        View Details
+                        <span class="ms-auto">
+                                <i class="bi bi-chevron-right"></i>
+                            </span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <!-- offcanvas -->
-    <main class="mt-5 pt-3">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4>Dashboard</h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-primary text-white h-100">
-                        <div class="card-body py-5">Doanh số theo năm</div>
-                        <div class="card-footer d-flex">
-                            View Details
-                            <span class="ms-auto">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
-                        </div>
+
+        <!-- chart -->
+
+
+        <!-- chart -->
+
+        <!--table-->
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="bi bi-table me-2"></i></span>
                     </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-warning text-dark h-100">
-                        <div class="card-body py-5">Doanh số theo quý</div>
-                        <div class="card-footer d-flex">
-                            View Details
-                            <span class="ms-auto">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body py-5">Doanh số theo tháng</div>
-                        <div class="card-footer d-flex">
-                            View Details
-                            <span class="ms-auto">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-danger text-white h-100">
-                        <div class="card-body py-5">Doanh số theo ngày</div>
-                        <div class="card-footer d-flex">
-                            View Details
-                            <span class="ms-auto">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead id="tb-head">
 
-            <!-- chart -->
+                                </thead>
 
+                                <tbody id="tb-show">
 
+                                </tbody>
 
-            <!-- chart -->
+                                <tfoot id="tb-footer">
 
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <span><i class="bi bi-table me-2"></i></span> Data Table
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="example" class="table table-striped data-table table-hover"
-                                    style="width: 100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Category</th>
-                                            <th>Subcategory</th>
-                                            <th>Description</th>
-                                            <th>Image</th>
-                                            <th colspan="2" style="text-align: center ">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>2011/04/25</td>
-                                            <th>Image</th>
-                                            <td>
-                                                <button type="button" class="btn btn-warning">Edit</button>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger">Lock</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cedric Kelly</td>
-                                            <td>Senior Javascript Developer</td>
-                                            <td>Edinburgh</td>
-                                            <td>2012/03/29</td>
-                                            <th>Image</th>
-                                            <td>
-                                                <button type="button" class="btn btn-warning">Edit</button>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger">Lock</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cedric Kelly</td>
-                                            <td>Senior Javascript Developer</td>
-                                            <td>Edinburgh</td>
-                                            <td>2012/03/29</td>
-                                            <th>Image</th>
-                                            <td>
-                                                <button type="button" class="btn btn-warning">Edit</button>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger">Lock</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Category</th>
-                                            <th>Subcategory</th>
-                                            <th>Description</th>
-                                            <th>Image</th>
-                                            <th colspan="2" style="text-align: center">Action</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
-    <footer>
-        
-    </footer>
-    <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/jquery-3.5.1.js"></script>
-    <script src="/assets/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
-    <script src="/assets/js/dataTables.bootstrap5.min.js"></script>
+    </div>
+    <!--table-->
+</main>
+<footer>
 
-    <script>
+</footer>
+<th:block th:insert="/dashboard/products/temp-option :: temp-option"/>
 
-        $(document).ready(function () {
-            $("#example").DataTable();
+<th:block th:insert="/dashboard/products/modalCreateProduct :: modal-create-product"/>
 
+<th:block th:insert="/dashboard/products/modalUpdateProduct :: modal-update-product"/>
+
+<th:block th:insert="/dashboard/products/table-product :: temp-products"/>
+
+<th:block th:insert="/dashboard/products/table-category :: temp-categories"/>
+
+<th:block th:insert="/dashboard/products/table-subcategory :: temp-subcategory"/>
+
+<th:block th:insert="/dashboard/products/modalCreateCategory :: modal-create-category"/>
+
+<th:block th:insert="/dashboard/products/modalCreateSubcategory :: modal-create-subcategory"/>
+
+<th:block th:insert="/dashboard/products/modalCreateProductCombination :: modal-create-products-combination"/>
+
+<th:block th:insert="/dashboard/products/table-stocks :: temp-products-stocks"/>
+
+<th:block th:include="/dashboard/layout/scripts :: script"/>
+
+<script src="/assets/js/App.js"></script>
+
+<script>
+
+
+    let page = {
+        urls: {
+            getProductById: "http://localhost:8086/api/product/getProductById/",
+            getAllProduct: "http://localhost:8086/api/product/showAll",
+            getAllCategory: "http://localhost:8086/api/category/showAllCategory",
+            getAllProductsStock: "http://localhost:8086/api/stock/showAllProductsCombination",
+            getAllSubcategory: "http://localhost:8086/api/subcategory/showAllSubcategory",
+            getAllSubcategoryByCategoryId: "http://localhost:8086/api/subcategory/showAllSubcategoryByCategory_id/",
+            doCreateProduct: "http://localhost:8086/api/product/createProduct",
+            createCategory: "http://localhost:8086/api/category/createCategory",
+            createSubcategory: "http://localhost:8086/api/subcategory/createSubcategory",
+
+        },
+        element: {},
+        commands: {},
+        loadData: {},
+        dialogs: {
+            element: {},
+            commands: {}
+        }
+    }
+
+    let product = new Product();
+
+    let productsCombination = new ProductsCombination();
+
+    let category = new Category();
+
+    let subcategory = new Subcategory();
+
+    let tempProduct = $.validator.format($.trim($("#tempProduct").val()));
+
+    let tempProductsCombination = $.validator.format($.trim($("#tempProductsStock").val()))
+
+    let tempCategory = $.validator.format($.trim($("#tempCategories").val()));
+
+    let tempSubcategory = $.validator.format($.trim($("#tempSubcategories").val()));
+
+    let tempOption = $.validator.format($.trim($("#tempOption").val()));
+
+    let addRowProduct = () => {
+
+        let image_thumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + product.fileFolder + "/" + product.fileName;
+
+        $("#tb-show").prepend($(tempProduct(product.id, product.title, product.category_name, product.subcategory_name, product.description, image_thumbnail)));
+    }
+
+    let addRowProductCombination = () => {
+        let image_thumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + productsCombination.fileFolder + "/" + productsCombination.fileName;
+
+        $("#tb-show").prepend($(tempProductsCombination(productsCombination.id, productsCombination.combination_string, productsCombination.product_title,
+            productsCombination.total_stock, productsCombination.unit_price, productsCombination.maximum_retail_price, image_thumbnail)));
+    }
+
+    let addRowCategory = () => {
+        $("#tb-show").prepend($(tempCategory(category.id, category.categoryName)));
+    }
+
+    let addRowSubcategory = () => {
+        $("#tb-show").prepend($(tempSubcategory(subcategory.id, subcategory.subcategoryName, subcategory.categoryName)));
+    }
+
+    let addRowOption = (element, id, name) => {
+        $(element).prepend($(tempOption(id, name)));
+    }
+
+    function findProductById(id) {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getProductById + id
+        })
+            .done(function (data) {
+                product = data;
+            })
+            .fail(function (jqXHR) {
+                console.log("Error findById: " + jqXHR);
+            })
+    }
+
+    function loadProduct() {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllProduct,
+        })
+            .done(function (data) {
+                $("#tb-show").html("");
+                $("#tb-head").html(" <tr style=\"text-align: center\">\n" +
+                    "                          <th>Title</th>\n" +
+                    "                          <th>Category</th>\n" +
+                    "                          <th>Subcategory</th>\n" +
+                    "                          <th>Description</th>\n" +
+                    "                          <th>Image</th>\n" +
+                    "                          <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
+                    "                                    <th>Title</th>\n" +
+                    "                                    <th>Category</th>\n" +
+                    "                                    <th>Subcategory</th>\n" +
+                    "                                    <th>Description</th>\n" +
+                    "                                    <th>Image</th>\n" +
+                    "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+                data.forEach(item => {
+                    product = item;
+                    addRowProduct();
+                })
+                App.IziToast.showSuccessAlert("Load product successful!!!")
+
+            })
+            .fail(function (jqXHR) {
+                $("#tb-show").html("");
+                $("#tb-head").html(" <tr style=\"text-align: center\">\n" +
+                    "                          <th>Title</th>\n" +
+                    "                          <th>Category</th>\n" +
+                    "                          <th>Subcategory</th>\n" +
+                    "                          <th>Description</th>\n" +
+                    "                          <th>Image</th>\n" +
+                    "                          <th colspan=\"3\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
+                    "                                    <th>Title</th>\n" +
+                    "                                    <th>Category</th>\n" +
+                    "                                    <th>Subcategory</th>\n" +
+                    "                                    <th>Description</th>\n" +
+                    "                                    <th>Image</th>\n" +
+                    "                                    <th colspan=\"3\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+                console.log(jqXHR);
+                App.SweetAlert.showErrorAlert("Can not found product!!!");
+                handleGroupModal();
+            })
+    }
+
+    function drawCategory(element) {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllCategory
+        })
+            .done(function (data) {
+                $(element).empty();
+                console.log(data);
+                data.forEach(item => {
+                    category = item;
+                    console.log(category);
+                    // $("#optionCategory").html(`<option value="${category.id}">(${category.id}) ${category.categoryName}</option>`)
+                    addRowOption(element, category.id, category.categoryName);
+                })
+            })
+            .fail(function (jqXHR) {
+                console.log(jqXHR);
+                App.IziToast.showErrorAlert("Can draw category")
+            })
+    }
+
+    function drawSubCategory(element, elementCategory) {
+        category.id = $(elementCategory).val();
+        console.log("elementCategory: " + elementCategory);
+        console.log("category_id " + category.id);
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllSubcategoryByCategoryId + category.id
+        })
+            .done(function (data) {
+                $(element).empty();
+                data.forEach(item => {
+                    subcategory = item;
+                    addRowOption(element, subcategory.id, subcategory.subcategoryName);
+                })
+            })
+            .fail(function (jqXHR) {
+                console.log(jqXHR);
+                $(element).empty();
+                App.SweetAlert.showErrorAlert("Subcategory does not exist!!!")
+            })
+    }
+
+    function loadCategory() {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllCategory,
+        })
+            .done(function (data) {
+                console.log(data);
+                $("#tb-show").html("");
+                data.forEach(item => {
+                    category = item;
+                    $("#tb-head").html("  <tr style='text-align: center'>\n" +
+                        "                                    <th>#</th>\n" +
+                        "                                    <th>Category</th>\n" +
+                        "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                        "                                </tr>");
+
+                    $("#tb-footer").html("  <tr style='text-align: center'>\n" +
+                        "                                    <th>#</th>\n" +
+                        "                                    <th>Category</th>\n" +
+                        "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                        "                                </tr>")
+                    addRowCategory();
+                })
+
+
+            })
+            .fail(function (jqXHR) {
+                $("#tb-head").html("  <tr style='text-align: center'>\n" +
+                    "                                    <th>#</th>\n" +
+                    "                                    <th>Category</th>\n" +
+                    "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style='text-align: center'>\n" +
+                    "                                    <th>#</th>\n" +
+                    "                                    <th>Category</th>\n" +
+                    "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+                console.log(jqXHR);
+                App.SweetAlert.showErrorAlert("No category in list!!");
+            })
+    }
+
+    function loadSubcategory() {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllSubcategory,
+        })
+            .done(function (data) {
+                $("#tb-show").html("");
+                $("#tb-head").html(`  <tr style='text-align: center'>\n" +
+                    "                                    <th>#</th>\n" +
+                    "                                    <th>Subcategory</th>\n" +
+                    "                                    <th>Category</th>\n" +
+                    "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>`);
+
+                $("#tb-footer").html(`  <tr style='text-align: center'>\n" +
+                    "                                    <th>#</th>\n" +
+                    "                                    <th>Subcategory</th>\n" +
+                    "                                    <th>Category</th>\n" +
+                    "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>`)
+                data.forEach(item => {
+                    subcategory = item;
+                    addRowSubcategory();
+                })
+                App.IziToast.showSuccessAlert("Load subcategory successful!!!")
+            })
+            .fail(function (jqXHR) {
+                console.log(jqXHR);
+                $("#tb-show").html("");
+                $("#tb-head").html("  <tr style='text-align: center'>\n" +
+                    "                                    <th>#</th>\n" +
+                    "                                    <th>Subcategory</th>\n" +
+                    "                                    <th>Category</th>\n" +
+                    "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style='text-align: center'>\n" +
+                    "                                    <th>#</th>\n" +
+                    "                                    <th>Subcategory</th>\n" +
+                    "                                    <th>Category</th>\n" +
+                    "                                    <th colspan=\"2\" style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+                App.SweetAlert.showErrorAlert("Can not load list subcategories")
+            })
+    }
+
+    function loadProductsStock() {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllProductsStock
+        })
+            .done(function (data) {
+                $("#tb-show").html("");
+                $("#tb-head").html(`<tr>
+                                        <td>Name variable</td>
+                                        <td>Name product</td>
+                                        <td>Total stock</td>
+                                        <td>Unit price</td>
+                                        <td>Maximum retail price</td>
+                                        <td>Image</td>
+                                        <td colspan="2">Action</td>
+                                    </tr>`);
+
+                $("#tb-footer").html(`<tr>
+                                        <td>Name variable</td>
+                                        <td>Name product</td>
+                                        <td>Total stock</td>
+                                        <td>Unit price</td>
+                                        <td>Maximum retail price</td>
+                                        <td>Image</td>
+                                        <td colspan="2">Action</td>
+                                    </tr>`)
+            })
+            .fail(function (jxQHR) {
+                console.log(jxQHR)
+                $("#tb-show").html("");
+                $("#tb-head").html(`<tr>
+                                        <td>Name variable</td>
+                                        <td>Name product</td>
+                                        <td>Total stock</td>
+                                        <td>Unit price</td>
+                                        <td>Maximum retail price</td>
+                                        <td>Image</td>
+                                        <td colspan="2">Action</td>
+                                    </tr>`);
+
+                $("#tb-footer").html(`<tr>
+                                        <td>Name variable</td>
+                                        <td>Name product</td>
+                                        <td>Total stock</td>
+                                        <td>Unit price</td>
+                                        <td>Maximum retail price</td>
+                                        <td>Image</td>
+                                        <td colspan="2">Action</td>
+                                    </tr>`)
+
+                App.SweetAlert.showErrorAlert("Can not load stock")
+            })
+    }
+
+    function handleGroupModal() {
+        handlePreviewProductCreate();
+        handleRemoveImageProductCreate();
+        handlePreviewProductUpdate();
+        handleRemoveImageProductUpdate();
+        handleLoadProduct();
+        handleCreateProductModal();
+        handleCreateCategoryModal();
+        handleLoadCategory();
+        handleCreateSubcategoryModal();
+        handleLoadSubcategory();
+        handleUpdateProductModal();
+        handleCreateProductsCombination();
+        handleLoadProductsStock();
+    }
+
+    //Handle button
+
+    function handleLoadProduct() {
+        $("#showProduct").on("click", function () {
+            loadProduct();
+        })
+    }
+
+    function handleLoadProductsStock() {
+        $("#showAllStock").on("click", function () {
+            loadProductsStock();
+        })
+    }
+
+    function handleCreateProductModal() {
+        $("#createProduct").on("click", function () {
+            drawCategory("#categoryProductCreate").then(function () {
+                drawSubCategory("#subcategoryProductCreate", "#categoryProductCreate");
+            });
+            changeSubcategoryFollowCategory("#categoryProductCreate", "#subcategoryProductCreate");
+            $("#createProductModal").modal("show");
+        })
+    }
+
+    function handleUpdateProductModal() {
+        $("#tb-show").on("click", ".btn-updateProduct", function () {
+            let id = $(this).data("id");
+            drawCategory("#categoryProductUpdate").then(function () {
+                findProductById(id).then(function () {
+                    product.id = id;
+                    $("#productTitleUpdate").val(product.title);
+                    $("#categoryProductUpdate").val(product.category_id);
+                    $("#descriptionProductUpdate").val(product.description);
+                    $("#imagePreviewUpdate").attr("src", product.fileUrl);
+                }).then(function () {
+                    drawSubCategory("#subcategoryProductUpdate", "#categoryProductUpdate").then(function () {
+                        $("#subcategoryProductUpdate").val(product.subcategory_id);
+                        $("#updateProductModal").modal("show");
+
+                        changeSubcategoryFollowCategory("#categoryProductUpdate", "#subcategoryProductUpdate");
+                    });
+                })
+
+            });
+        })
+    }
+
+    function handleCreateCategoryModal() {
+        $("#createCategory").on("click", function () {
+            $("#createCategoryModal").modal("show");
+        })
+    }
+
+    function handleLoadCategory() {
+        $("#sidebar").on("click", "#showAllCategory", function () {
+            loadCategory();
+            App.IziToast.showSuccessAlert("Load list category successful!!! ");
+        })
+    }
+
+    function handleLoadSubcategory() {
+        $("#sidebar").on("click", "#showAllSubcategory", function () {
+            loadSubcategory();
+        })
+    }
+
+    function handleCreateSubcategoryModal() {
+        $("#createSubcategory").on("click", function () {
+            $("#createSubcategoryModal").modal("show");
+            drawCategory("#optionCategory");
+        })
+    }
+
+    function handleCreateProductsCombination() {
+        $("#tb-show").on("click", ".btn-createProductCombination", function () {
+            console.log("Vao day chua btn create product")
+            $("#createProductsCombinationModal").modal("show");
+        })
+    }
+
+    function changeSubcategoryFollowCategory(elementCategory, elementSubcategory) {
+        $(elementCategory).on("change", function () {
+            drawSubCategory(elementSubcategory, elementCategory);
+        })
+    }
+
+    // Gọi API để thực hiện nghiệp vụ
+    function doCreateCategory() {
+        category.id = 0;
+        category.categoryName = $("#nameCategoryCreate").val();
+        return $.ajax({
+            type: "POST",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.createCategory,
+            data: JSON.stringify(category)
+        })
+            .done(function (data) {
+                category = data;
+                addRowCategory();
+                App.SweetAlert.showSuccessAlert("Create new category successful !!!");
+                $("#createCategoryModal").modal("hide");
+            })
+            .fail(function (jqXHR) {
+                console.log("jqXHR: ");
+                console.log(jqXHR);
+                App.SweetAlert.showErrorAlert("Cannot create new category !!!")
+
+            })
+    }
+
+    function doCreateSubcategory() {
+        subcategory.id = 0;
+        subcategory.subcategoryName = $("#nameSubcategoryCreate").val();
+        subcategory.category_id = $("#optionCategory").val()
+        return $.ajax({
+            type: "POST",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            data: JSON.stringify(subcategory),
+            url: page.urls.createSubcategory,
+        })
+            .done(function (data) {
+                subcategory = data;
+                addRowSubcategory();
+                $("#createSubcategoryModal").modal("hide");
+                App.SweetAlert.showSuccessAlert("Create new subcategory successful!!!")
+
+            })
+            .fail(function (jqXHR) {
+                console.log(jqXHR);
+                App.SweetAlert.showErrorAlert("Can not create new subcategory");
+            })
+    }
+
+    function doCreateProduct() {
+        let formData = new FormData();
+        formData.append("title", $("#productTitleCreate").val().toString());
+        formData.append("category_id", $("#categoryProductCreate").val().toString());
+        formData.append("subcategory_id", $("#subcategoryProductCreate").val().toString());
+        formData.append("description", $("#descriptionProductCreate").val().toString());
+        formData.append("multipartFile", $("#imageFileCreate")[0].files[0]);
+
+        console.log("form file: " + formData.append("multipartFile", $("#imageFileCreate")[0].files[0]))
+        $.ajax({
+            type: "POST",
+            contentType: false,
+            cache: false,
+            processData: false,
+            url: page.urls.doCreateProduct,
+            data: formData,
+        })
+            .done(function (data) {
+                product = data;
+                addRowProduct();
+                App.SweetAlert.showSuccessAlert("Create product successful!!!");
+                removeImage("#imageFileCreate", "#imagePreviewCreate");
+                $("#createProductModal").modal("hide");
+            })
+            .fail(function (jqXHR) {
+                console.log(jqXHR);
+                App.SweetAlert.showErrorAlert("Can not create new product");
+            })
+    }
+
+    function resetModal(formElement) {
+        $(formElement)[0].reset();
+        $(formElement).validate().resetForm();
+        $(formElement + ' input.error').removeClass("error");
+    }
+
+    function closeModal(modal, formElement) {
+        $(modal).on("hidden.bs.modal", function () {
+            $(modal + ' .modal-alert-danger').empty().removeClass('show').addClass('hide');
+            resetModal(formElement);
         });
+    }
 
-    </script>
+    closeModal("#createProductModal", "#frmCreateProduct");
+
+    closeModal("#createCategoryModal", "#frmCreateCategory");
+
+    closeModal("#createSubcategoryModal", "#frmCreateSubcategory");
+
+    $("#frmCreateProduct").validate({
+        rules: {
+            productTitleCreate: {
+                required: true
+            },
+            categoryProductCreate: {
+                required: true
+            },
+            subcategoryProductCreate: {
+                required: true
+            }
+        },
+        message: {
+            productTitleCreate: {
+                required: "Field title can not empty"
+            },
+            categoryProductCreate: {
+                required: "Field category can not empty"
+            },
+            subcategoryProductCreate: {
+                required: "Field subcategory can not empty"
+            }
+        },
+        submitHandler: function () {
+            doCreateProduct();
+        }
+    })
+
+    $("#frmCreateCategory").validate({
+        rules: {
+            nameCategoryCreate: {
+                required: true
+            }
+        },
+
+        message: {
+            nameCategoryCreate: {
+                required: 'This field can not empty!!!!'
+            }
+        },
+        submitHandler: function () {
+            doCreateCategory();
+        }
+    })
+
+    $("#frmCreateSubcategory").validate({
+        rules: {
+            nameSubcategoryCreate: {
+                required: true
+            }
+        },
+        message: {
+            nameSubcategoryCreate: {
+                required: "This field can not be empty!!!"
+            }
+        },
+        submitHandler: function () {
+            doCreateSubcategory();
+        }
+    })
+
+    $("#btnCreateProduct").on("click", function () {
+        console.log("Vao chua")
+        $("#frmCreateProduct").submit();
+    })
+
+    $("#btnCreateCategory").on("click", function () {
+        $("#frmCreateCategory").submit();
+    })
+
+    $("#btnCreateSubcategory").on("click", function () {
+        $("#frmCreateSubcategory").submit();
+    })
+
+    function previewUploadImage(elementFileImage, elementImage) {
+        let imageSrc = $(elementFileImage)[0].files[0];
+        if (imageSrc) {
+            let reader = new FileReader();
+            reader.readAsDataURL(imageSrc);
+            reader.onload = function () {
+                $(elementImage).attr("src", this.result);
+            }
+        }
+    }
+
+    function handlePreviewProductCreate() {
+        $("#imageFileBtnCreate").on("click", function () {
+            $("#imageFileCreate").click();
+            $("#imageFileCreate").on("change", function () {
+                previewUploadImage("#imageFileCreate", "#imagePreviewCreate");
+
+            })
+        })
+    }
+
+    function handlePreviewProductUpdate() {
+        $("#imageFileBtnUpdate").on("click", function () {
+            $("#imageFileUpdate").click();
+            $("#imageFileUpdate").on("change", function () {
+                previewUploadImage("#imageFileUpdate", "#imagePreviewUpdate");
+            })
+        })
+    }
+
+    function removeImage(elementFileImage, elementImage) {
+        $(elementImage).attr("src", "#");
+        $(elementFileImage).val("");
+    }
+
+    function handleRemoveImageProductCreate() {
+        $("#cancelImageCreate").on("click", function () {
+            removeImage("#imageFileCreate", "#imagePreviewCreate");
+        })
+    }
+
+    function handleRemoveImageProductUpdate() {
+        $("#cancelImageUpdate").on("click", function () {
+            removeImage("#imageFileUpdate", "#imagePreviewUpdate");
+        })
+    }
+
+
+    loadProduct().then(function () {
+        handleGroupModal();
+    })
+
+
+</script>
+
 </body>
 
 </html>

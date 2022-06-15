@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<th:block th:fragment="modal-create">
-    <div class="modal fade" id="createModal" tabindex="-1">
+<th:block th:fragment="modal-create-product">
+    <div class="modal fade" id="createProductModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -9,50 +9,88 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="frmCreate">
-                        <div class="row mt-3">
-                            <div class="col-md-6 mb-3">
-                                <label for="nameProductCreate" class="form-label">Name drinks</label>
-                                <input type="text" class="form-control" id="nameProductCreate" name="nameProductCreate">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="priceCreate" class="form-label">Price</label>
-                                <input type="number" class="form-control" id="priceCreate" name="priceCreate">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="col-sm-12 col-form-label">Category</label>
-                                <div class="col-sm-6">
-                                    <select class="form-select" id="category" name="category"></select>
+                    <form id="frmCreateProduct" enctype="multipart/form-data">
+                        <fieldset class="row g-3">
+                            <div class="mb-3 col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-form-label">Title</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" id="productTitleCreate" name="productTitleCreate"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm-12 col-form-label">Category</label> <br>
+                                        <select class="form-select" id="categoryProductCreate"
+                                                name="categoryProductCreate"></select>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col-sm-12 col-form-label">Subcategory</label><br>
+                                        <select class="form-select" id="subcategoryProductCreate"
+                                                name="subcategoryProductCreate"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-form-label">Description</label>
+                                    <div class="col-sm-12">
+                                        <textarea name="descriptionProductCreate" id="descriptionProductCreate"
+                                                  cols="50" rows="4"></textarea>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="descriptionCreate" class="form-label">Description</label>
-                                <textarea type="tel" class="form-control" id="descriptionCreate" name="descriptionCreate"></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="mb-3 col-md-6">
                                 <section>
-                                    <div class="wrapper">
-                                        <div class="file-name">
-                                           <label>Chọn hình ảnh cho sản phẩm:</label> <br/>
-                                            <input type="file" id="imageFile" accept="image/jpeg, image/png"/>
+                                    <div class="container">
+                                        <div class="wrapper">
+                                            <div class="image">
+                                                <img src="" alt="" id="imagePreviewCreate">
+                                            </div>
+                                            <div class="content">
+                                                <div class="icon">
+                                                    <i class="fas fa-cloud-upload-alt"></i>
+                                                </div>
+                                                <div class="text">
+                                                    No file chosen, yet!
+                                                </div>
+                                            </div>
+                                            <div class="file-name">
+                                                File name here
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button class="btn btn-outline-secondary buttonImage" type="button"
+                                                        id="imageFileBtnCreate">Choose a file
+                                                </button>
+                                                <br>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-danger buttonImage" type="button"
+                                                        id="cancelImageCreate">Remove
+                                                    image
+                                                </button>
+                                            </div>
+
+                                            <input id="imageFileCreate" type="file" accept="image/jpeg, image/png"
+                                                   hidden>
                                         </div>
                                     </div>
-
                                 </section>
                             </div>
-
-                        </div>
+                        </fieldset>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="btnCreate" class="btn btn-outline-primary">Create</button>
+                    <button type="button" id="btnCreateProduct" class="btn btn-outline-primary">Create</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <script>
+
+    </script>
 </th:block>

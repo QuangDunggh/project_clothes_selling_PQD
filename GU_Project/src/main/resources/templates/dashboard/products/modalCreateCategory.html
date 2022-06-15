@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="modal-create-category">
+    <div class="modal fade" id="createCategoryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="frmCreateCategory" novalidate="novalidate" enctype="multipart/form-data">
+                        <div class="row mt-12">
+                            <div class="col-md-12 mb-3">
+                                <label for="nameCategoryCreate" class="form-label">Name category</label>
+                                <input type="text" class="form-control" id="nameCategoryCreate" name="nameCategoryCreate">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="btnCreateCategory" class="btn btn-outline-warning">Create category</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

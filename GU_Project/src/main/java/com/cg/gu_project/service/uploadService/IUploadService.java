@@ -1,4 +1,17 @@
-package com.cg.gu_project.service.imageUploader;
+package com.cg.gu_project.service.uploadService;
 
-public class IImageUploader {
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Map;
+
+public interface IUploadService {
+
+    Map uploadImage(MultipartFile multipartFile, Map params) throws IOException;
+
+    Map destroyImage(String publicId, Map params) throws IOException;
+
+    Map uploadVideo(MultipartFile multipartFile, Map params) throws IOException;
+
+    Map destroyVideo(String publicId, Map params) throws IOException;
 }

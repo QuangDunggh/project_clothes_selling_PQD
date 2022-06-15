@@ -1,10 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="modal-update-product">
+    <div class="modal fade" id="updateProductModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal Create</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="frmUpdateProduct" enctype="multipart/form-data">
+                        <fieldset class="row g-3">
+                            <div class="mb-3 col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-form-label">Title</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" id="productTitleUpdate" name="productTitleUpdate"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm-12 col-form-label">Category</label> <br>
+                                        <select class="form-select" id="categoryProductUpdate"
+                                                name="categoryProductUpdate"></select>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col-sm-12 col-form-label">Subcategory</label><br>
+                                        <select class="form-select" id="subcategoryProductUpdate"
+                                                name="subcategoryProductUpdate"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-form-label">Description</label>
+                                    <div class="col-sm-12">
+                                        <textarea name="descriptionProductUpdate" id="descriptionProductUpdate"
+                                                  cols="50" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <section>
+                                    <div class="container">
+                                        <div class="wrapper updateProduct">
+                                            <div class="image">
+                                                <img src="" alt="" id="imagePreviewUpdate">
+                                            </div>
+                                            <div class="content">
+                                                <div class="icon">
+                                                    <i class="fas fa-cloud-upload-alt"></i>
+                                                </div>
+                                                <div class="text">
+                                                    No file chosen, yet!
+                                                </div>
+                                            </div>
+                                            <div class="file-name">
+                                                File name here
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button class="btn btn-outline-secondary buttonImage" type="button"
+                                                        id="imageFileBtnUpdate">Choose a file
+                                                </button>
+                                                <br>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-danger buttonImage" type="button" id="cancelImageUpdate">Remove
+                                                    image
+                                                </button>
+                                            </div>
+
+                                            <input id="imageFileUpdate" type="file" accept="image/jpeg, image/png"
+                                                   hidden>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="btnUpdateProduct" class="btn btn-outline-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</th:block>
