@@ -14,7 +14,9 @@ public interface IProductService extends IGeneralService<Product> {
 
     ProductClientDTO saveProductDTO(ProductDTO productDTO);
 
-    public List<ProductClientDTO> findAllProductClientDTO();
+    ProductClientDTO updateProductDTO(ProductDTO productDTO);
+
+    List<ProductClientDTO> findAllProductClientDTO();
 
     Long countProductByCategoryId(Long category_id);
 

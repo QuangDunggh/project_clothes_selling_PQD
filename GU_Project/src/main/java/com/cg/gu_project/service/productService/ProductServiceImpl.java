@@ -45,6 +45,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private UploadUtils uploadUtils;
+
     @Override
     public List<Product> findAll() {
         return productRepository.findAll();
@@ -81,7 +82,7 @@ public class ProductServiceImpl implements IProductService {
 
         imageService.save(imageGallery);
 
-        uploadAndSaveImage(productDTO,imageGallery);
+        uploadAndSaveImage(productDTO, imageGallery);
         product.setImage(imageGallery);
         productRepository.save(product);
         productClientDTO.setId(product.getId());
@@ -94,6 +95,81 @@ public class ProductServiceImpl implements IProductService {
         productClientDTO.setDescription(productDTO.getDescription());
 
         return productClientDTO;
+    }
+
+    @Override
+    public ProductClientDTO updateProductDTO(ProductDTO productDTO) {
+
+        Optional<Product> product = findById(productDTO.getId());
+
+        Optional<ImageGallery> imageGallery = imageService.findById(productDTO.getId());
+
+        ProductClientDTO productClientDTO = productMapper.toProductClientDTO(productDTO);
+
+        if (product.isPresent()) {
+            if (productDTO.getFileName().equals(product.get().getImage().getFileName())) {
+                Product productUpdate = productMapper.toProduct(productDTO);
+
+                productUpdate.setImage(imageGallery.get());
+
+                productRepository.save(productUpdate);
+
+                productClientDTO.setId(product.get().getId());
+                productClientDTO.setCategory_name(categoryService.findById(productClientDTO.getCategory_id()).get().getCategoryName());
+                productClientDTO.setSubcategory_name(subcategoryService.findById(productDTO.getSubcategory_id()).get().getSubCategoryName());
+                productClientDTO.setFileUrl(imageGallery.get().getFileUrl());
+                productClientDTO.setCloudId(imageGallery.get().getCloudId());
+                productClientDTO.setFileName(imageGallery.get().getFileName());
+                productClientDTO.setFileFolder(imageGallery.get().getFileFolder());
+                productClientDTO.setDescription(productDTO.getDescription());
+
+                return productClientDTO;
+            } else {
+                Product productUpdate = productMapper.toProduct(productDTO);
+
+                deleteImage(product.get());
+
+                ImageGallery imageGalleryUpdate = new ImageGallery();
+
+                uploadAndSaveImage(productDTO, imageGalleryUpdate);
+
+                productUpdate.setImage(imageGalleryUpdate);
+
+                productRepository.save(productUpdate);
+
+                productClientDTO.setId(product.get().getId());
+                productClientDTO.setCategory_name(categoryService.findById(productClientDTO.getCategory_id()).get().getCategoryName());
+                productClientDTO.setSubcategory_name(subcategoryService.findById(productDTO.getSubcategory_id()).get().getSubCategoryName());
+                productClientDTO.setFileUrl(imageGalleryUpdate.getFileUrl());
+                productClientDTO.setCloudId(imageGalleryUpdate.getCloudId());
+                productClientDTO.setFileName(imageGalleryUpdate.getFileName());
+                productClientDTO.setFileFolder(imageGalleryUpdate.getFileFolder());
+                productClientDTO.setDescription(productDTO.getDescription());
+
+
+                return productClientDTO;
+            }
+
+        }
+
+
+        return null;
+    }
+
+    public void deleteImage(Product product) {
+        try {
+            Optional<ImageGallery> productImageVideo = imageService.findById(product.getImage().getId());
+
+            String publicId = productImageVideo.get().getCloudId();
+
+            uploadService.destroyImage(publicId, uploadUtils.buildImageDestroyParams(product, publicId));
+
+            imageService.remove(product.getImage().getId());
+        } catch (IOException e) {
+            throw new RuntimeException("Can not delete this image");
+        }
+
+
     }
 
     @Override

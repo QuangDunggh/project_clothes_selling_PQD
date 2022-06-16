@@ -27,7 +27,7 @@
                 <h4>Dashboard</h4>
             </div>
         </div>
-        <div class="row">
+        <div class="row none-display">
             <div class="col-md-3 mb-3">
                 <div class="card bg-primary text-white h-100">
                     <div class="card-body py-5">Doanh số theo năm</div>
@@ -149,6 +149,7 @@
             getAllSubcategory: "http://localhost:8086/api/subcategory/showAllSubcategory",
             getAllSubcategoryByCategoryId: "http://localhost:8086/api/subcategory/showAllSubcategoryByCategory_id/",
             doCreateProduct: "http://localhost:8086/api/product/createProduct",
+            doUpdateProduct: "http://localhost:8086/api/product/updateProduct/",
             createCategory: "http://localhost:8086/api/category/createCategory",
             createSubcategory: "http://localhost:8086/api/subcategory/createSubcategory",
 
@@ -674,6 +675,39 @@
             })
     }
 
+    function doUpdateProduct() {
+        let formData = new FormData();
+        formData.append("title", $("#productTitleUpdate").val().toString());
+        formData.append("category_id", $("#categoryProductUpdate").val().toString());
+        formData.append("subcategory_id", $("#subcategoryProductUpdate").val().toString());
+        formData.append("description", $("#descriptionProductUpdate").val().toString());
+        formData.append("multipartFile", $("#imageFileUpdate")[0].files[0]);
+
+        console.log("form file: " + formData.append("multipartFile", $("#imageFileCreate")[0].files[0]))
+        $.ajax({
+            type: "PUT",
+            contentType: false,
+            cache: false,
+            processData: false,
+            url: page.urls.doUpdateProduct + product.id,
+            data: formData,
+        })
+            .done(function (data) {
+                product = data;
+                let image_thumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + product.fileFolder + "/" + product.fileName;
+                let currentRow = $("#tr_product_" + product.id);
+                let updateRow = $(tempProduct(product.id, product.title, product.category_name, product.subcategory_name, product.description, image_thumbnail))
+                currentRow.replaceWith(updateRow);
+                App.SweetAlert.showSuccessAlert("Update product successful!!!");
+                removeImage("#imageFileUpdate", "#imagePreviewUpdate");
+                $("#updateProductModal").modal("hide");
+            })
+            .fail(function (jqXHR) {
+                console.log(jqXHR);
+                App.SweetAlert.showErrorAlert("Can not update new product");
+            })
+    }
+
     function resetModal(formElement) {
         $(formElement)[0].reset();
         $(formElement).validate().resetForm();
@@ -721,6 +755,36 @@
         }
     })
 
+    $("#frmUpdateProduct").validate({
+        rules: {
+            productTitleUpdate: {
+                required: true
+            },
+            categoryProductUpdate: {
+                required: true
+            },
+            subcategoryProductUpdate: {
+                required: true
+            }
+        },
+
+        message: {
+            productTitleUpdate: {
+                required: "Field title can not empty"
+            },
+            categoryProductUpdate: {
+                required: "Field category can not empty"
+            },
+            subcategoryProductUpdate: {
+                required: "Field subcategory can not empty"
+            }
+        },
+
+        submitHandler: function () {
+            doUpdateProduct();
+        }
+    })
+
     $("#frmCreateCategory").validate({
         rules: {
             nameCategoryCreate: {
@@ -757,6 +821,10 @@
     $("#btnCreateProduct").on("click", function () {
         console.log("Vao chua")
         $("#frmCreateProduct").submit();
+    })
+
+    $("#btnUpdateProduct").on("click", function () {
+        $("#frmUpdateProduct").submit();
     })
 
     $("#btnCreateCategory").on("click", function () {

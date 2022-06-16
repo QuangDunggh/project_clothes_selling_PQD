@@ -2,6 +2,7 @@ package com.cg.gu_project.controller.productController.RestfulAPI;
 
 import com.cg.gu_project.dto.ProductClientDTO;
 import com.cg.gu_project.dto.ProductDTO;
+import com.cg.gu_project.model.Product;
 import com.cg.gu_project.service.productService.IProductService;
 import com.cg.gu_project.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,20 @@ public class ProductAPI {
         ProductClientDTO productClientDTO = productService.saveProductDTO(productDTO);
 
         return new ResponseEntity<>(productClientDTO, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/updateProduct/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id,
+                                           ProductDTO productDTO) {
+        System.out.println("Vao chua: " + id);
+        Optional<Product> product = productService.findById(id);
+
+        if(product.isPresent()) {
+            productDTO.setId(id);
+            ProductClientDTO productClientDTO = productService.updateProductDTO(productDTO);
+            return new ResponseEntity<>(productClientDTO,HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Can not update product", HttpStatus.BAD_REQUEST);
     }
 }

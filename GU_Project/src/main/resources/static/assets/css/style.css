@@ -22,6 +22,14 @@ button {
 .sidebar-link[aria-expanded="true"] .right-icon {
   transform: rotate(180deg);
 }
+
+.none-display{
+  display: none;
+}
+
+.display{
+  display: block;
+}
 @media (min-width: 992px) {
   body {
     overflow: auto !important;
