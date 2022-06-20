@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="modal-update-category">
+    <div class="modal fade" id="updateCategoryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="frmUpdateCategory" novalidate="novalidate" enctype="multipart/form-data">
+                        <div class="row mt-12">
+                            <div class="col-md-12 mb-3">
+                                <label for="nameCategoryUpdate" class="form-label">Name category</label>
+                                <input type="text" class="form-control" id="nameCategoryUpdate" name="nameCategoryUpdate">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="btnUpdateCategory" class="btn btn-outline-warning">Create category</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

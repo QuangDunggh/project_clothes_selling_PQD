@@ -22,7 +22,7 @@ public class Category {
     @Column(name = "category_name", nullable = false, length = 200)
     private String categoryName;
 
-
+    private boolean deleted = false;
 
 
 }

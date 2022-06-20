@@ -1,8 +1,10 @@
 package com.cg.gu_project.service.categoryService;
 
+import com.cg.gu_project.dto.CategoryDTO;
 import com.cg.gu_project.model.Category;
 import com.cg.gu_project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,5 +34,20 @@ public class CategoryServiceImpl implements ICategoryService{
     @Override
     public void remove(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Category> findAllByDeletedIsTrue() {
+        return categoryRepository.findAllByDeletedIsTrue();
+    }
+
+    @Override
+    public List<CategoryDTO> findAllCategoryDTODeleteFalse() {
+        return categoryRepository.findAllCategoryDTODeleteFalse();
+    }
+
+    @Override
+    public List<CategoryDTO> findAllCategoryDTODeleteTrue() {
+        return categoryRepository.findAllCategoryDTODeleteTrue();
     }
 }

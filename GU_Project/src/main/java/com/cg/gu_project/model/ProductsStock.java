@@ -30,6 +30,8 @@ public class ProductsStock {
     @Column(name = "unit_price")
     private Long unitPrice;
 
+    private boolean deleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "products_combination_id", nullable = false)
     private ProductsCombination productsCombination;

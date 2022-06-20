@@ -2,6 +2,7 @@ package com.cg.gu_project.controller.productController.RestfulAPI;
 
 import com.cg.gu_project.dto.ProductClientDTO;
 import com.cg.gu_project.dto.ProductDTO;
+import com.cg.gu_project.model.ImageGallery;
 import com.cg.gu_project.model.Product;
 import com.cg.gu_project.service.productService.IProductService;
 import com.cg.gu_project.utils.AppUtils;
@@ -58,12 +59,40 @@ public class ProductAPI {
         System.out.println("Vao chua: " + id);
         Optional<Product> product = productService.findById(id);
 
-        if(product.isPresent()) {
+        if (product.isPresent()) {
             productDTO.setId(id);
             ProductClientDTO productClientDTO = productService.updateProductDTO(productDTO);
-            return new ResponseEntity<>(productClientDTO,HttpStatus.OK);
+            return new ResponseEntity<>(productClientDTO, HttpStatus.OK);
         }
 
         return new ResponseEntity<>("Can not update product", HttpStatus.BAD_REQUEST);
     }
+
+    @PutMapping("/updateProductNoImage/{id}")
+    public ResponseEntity<?> updateProductNoImage(@PathVariable("id") Long id,
+                                                  ProductDTO productDTO) {
+        Optional<Product> product = productService.findById(id);
+
+        if (product.isPresent()) {
+            productDTO.setId(id);
+            ProductClientDTO productClientDTO = productService.updateProductWithoutImage(productDTO);
+            return new ResponseEntity<>(productClientDTO, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Product can not found", HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/suspensionProduct/{id}")
+    public ResponseEntity<?> suspensionProduct(@PathVariable("id") Long id) {
+        Optional<Product> product = productService.findById(id);
+
+        if(product.isPresent()) {
+            product.get().setDeleted(true);
+            productService.save(product.get());
+            return new ResponseEntity<>(id, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Can not found this product", HttpStatus.NOT_FOUND);
+    }
+
 }

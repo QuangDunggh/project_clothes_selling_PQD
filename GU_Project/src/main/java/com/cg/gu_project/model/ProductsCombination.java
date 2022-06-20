@@ -22,6 +22,8 @@ public class ProductsCombination {
     @JoinColumn(name = "image_gallery_id")
     private ImageGallery imageGallery;
 
+    private boolean deleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

@@ -81,9 +81,10 @@ class Product {
 }
 
 class Category {
-    constructor(id, categoryName) {
+    constructor(id, category_name,quantity_product) {
         this.id = id;
-        this.categoryName = categoryName;
+        this.category_name = category_name;
+        this.quantity_product = quantity_product
     }
 }
 
@@ -116,5 +117,19 @@ class ProductsCombination{
         this.defective = defective;
         this.unit_price = unit_price;
         this.maximum_retail_price = maximum_retail_price;
+    }
+}
+
+class Color{
+    constructor(id, color_name) {
+        this.id = id;
+        this.color_name = color_name
+    }
+}
+
+class Size{
+    constructor(id, size_name) {
+        this.id = id;
+        this.size_name = size_name
     }
 }

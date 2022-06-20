@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="temp-categories-lock">
+    <textarea style="display:none" id="tempCategoriesLock">
+        <tr id="tr_category_lock_{0}">
+            <td class="text-center">{0}</td>
+            <td class="text-center">{1}</td>
+            <td class="text-center">{2}</td>
+           <td class="text-center">
+                        <button type="button" class="btn btn-outline-secondary btn-restore-category" style="text-align: center"
+                                data-id="{0}">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-outline-danger btn-delete-category" style="text-align: center"
+                                data-id="{0}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+        </tr>
+    </textarea>
+</th:block>

@@ -42,8 +42,14 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
     }
 
     @Override
+    public List<SubcategoryDTO> findAllSubcategoryDTOLock() {
+        return subcategoryRepository.findAllSubcategoryDTOLock();
+    }
+
+    @Override
     public SubcategoryDTO createSubcategory(SubcategoryDTO subcategoryDTO) {
         Subcategory subcategory = new Subcategory();
+        subcategory.setId(subcategoryDTO.getId());
         subcategory.setSubCategoryName(subcategoryDTO.getSubcategoryName());
         subcategory.setCategory(categoryService.findById(subcategoryDTO.getCategory_id()).get());
         subcategoryRepository.save(subcategory);
@@ -60,5 +66,20 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
     @Override
     public List<SubcategoryDTO> findListSubcategoryByCategory_id(Long id) {
         return subcategoryRepository.findListSubcategoryByCategory_id(id);
+    }
+
+    @Override
+    public SubcategoryDTO findSubcategoryDTOById(Long id) {
+        return subcategoryRepository.findSubcategoryDTOById(id);
+    }
+
+    @Override
+    public void setSubcategoryDeletedIsTrueByCategoryId(Long id) {
+        subcategoryRepository.setSubcategoryDeletedIsTrueByCategoryId(id);
+    }
+
+    @Override
+    public void setSubcategoryDeletedIsFalseByCategoryId(Long id) {
+        subcategoryRepository.setSubcategoryDeletedIsFalseByCategoryId(id);
     }
 }
