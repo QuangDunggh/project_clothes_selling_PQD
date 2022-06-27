@@ -3,6 +3,7 @@ package com.cg.gu_project.controller.productController.RestfulAPI;
 import com.cg.gu_project.dto.ProductsCombinationClientDTO;
 import com.cg.gu_project.dto.ProductsCombinationDTO;
 import com.cg.gu_project.model.Color;
+import com.cg.gu_project.model.ProductsStock;
 import com.cg.gu_project.model.Size;
 import com.cg.gu_project.service.productCombiantion.IProductsCombinationService;
 import com.cg.gu_project.service.productsStock.IProductsStockService;
@@ -42,9 +43,32 @@ public class StockAPI {
         return new ResponseEntity<>(productsCombinationClientDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/showAllProductCombinationLock")
+    @GetMapping("/showProductsCombinationByProductId/{id}")
+    public ResponseEntity<?> showProductsCombinationByProductId(@PathVariable("id") Long id) {
+        List<ProductsCombinationClientDTO> productsCombinationClientDTOS = productsStockService.findAllProductsCombinationClientDTOByProductId(id);
+        if(productsCombinationClientDTOS.isEmpty()) {
+            return new ResponseEntity<>("Not found",HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(productsCombinationClientDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/showAllProductsCombinationLock")
     public ResponseEntity<?> showAllProductCombinationLock() {
-        return  null;
+        List<ProductsCombinationClientDTO> productsCombinationClientDTOS = productsStockService.findAllProductsCombinationClientDTOLock();
+        if(productsCombinationClientDTOS.isEmpty()) {
+            return new ResponseEntity<>("Can load ", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(productsCombinationClientDTOS,HttpStatus.OK);
+    }
+
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<?> findProductsCombinationClientDTOById(@PathVariable("id") Long id) {
+        Optional<ProductsCombinationClientDTO> productsCombinationClientDTO = productsStockService.findProductsCombinationClientDTOById(id);
+        if(productsCombinationClientDTO.isPresent()) {
+            return new ResponseEntity<>(productsCombinationClientDTO,HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Can not found this variable", HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/showAllColor")
@@ -76,8 +100,29 @@ public class StockAPI {
         return new ResponseEntity<>("Can not create productsCombination", HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/createProductsCombinationNoImage/")
+    public ResponseEntity<?> createProductsCombinationNoImage(@RequestBody ProductsCombinationDTO productsCombinationDTO) {
+        ProductsCombinationClientDTO productsCombinationClientDTO = productsCombinationService.createProductsCombinationNoImage(productsCombinationDTO);
+
+        return new ResponseEntity<>(productsCombinationClientDTO, HttpStatus.CREATED);
+    }
+
     @PutMapping("/updateProductsCombination/{id}")
     public ResponseEntity<?> updateProductsCombination(@PathVariable("id") Long id, ProductsCombinationDTO productsCombinationDTO) {
         return null;
+    }
+
+    @PutMapping("/updateProductsCombinationNoImage/{id}")
+    public ResponseEntity<?> updateProductsCombinationNoImage(@PathVariable("id") Long id,
+                                                              ProductsCombinationDTO productsCombinationDTO) {
+        Optional<ProductsStock> productsStock = productsStockService.findById(id);
+
+        if(productsStock.isPresent()) {
+            productsCombinationDTO.setId(id);
+            Optional<ProductsCombinationClientDTO> productsCombinationClientDTO = productsCombinationService.updateProductCombinationNoImage(productsCombinationDTO);
+            return new ResponseEntity<>(productsCombinationClientDTO, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Can not update!!!", HttpStatus.BAD_REQUEST);
     }
 }

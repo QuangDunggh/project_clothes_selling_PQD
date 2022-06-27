@@ -1,9 +1,18 @@
 package com.cg.gu_project.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "products_stocks")
 public class ProductsStock {
@@ -35,72 +44,5 @@ public class ProductsStock {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "products_combination_id", nullable = false)
     private ProductsCombination productsCombination;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(Long available) {
-        this.available = available;
-    }
-
-    public Long getDefective() {
-        return defective;
-    }
-
-    public void setDefective(Long defective) {
-        this.defective = defective;
-    }
-
-    public Long getMaximumRetailPrice() {
-        return maximumRetailPrice;
-    }
-
-    public void setMaximumRetailPrice(Long maximumRetailPrice) {
-        this.maximumRetailPrice = maximumRetailPrice;
-    }
-
-    public Long getSold() {
-        return sold;
-    }
-
-    public void setSold(Long sold) {
-        this.sold = sold;
-    }
-
-    public Long getTotalStock() {
-        return totalStock;
-    }
-
-    public void setTotalStock(Long totalStock) {
-        this.totalStock = totalStock;
-    }
-
-    public Long getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(Long unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public ProductsCombination getProductsCombination() {
-        return productsCombination;
-    }
-
-    public void setProductsCombination(ProductsCombination productsCombination) {
-        this.productsCombination = productsCombination;
-    }
-
-
 
 }

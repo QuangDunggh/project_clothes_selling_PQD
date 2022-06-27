@@ -15,6 +15,7 @@ import com.cg.gu_project.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.util.List;
@@ -67,6 +68,16 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public List<ProductClientDTO> findAllProductClientDTOLock() {
+        return productRepository.findAllProductClientDTOLock();
+    }
+
+    @Override
+    public List<ProductClientDTO> findProductClientDTOByCategoryId(Long id) {
+        return productRepository.findProductClientDTOByCategoryId(id);
+    }
+
+    @Override
     public Optional<ProductClientDTO> findProductClientDTOById(Long id) {
         return productRepository.findProductClientDTOById(id);
     }
@@ -98,25 +109,73 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductClientDTO updateProductDTO(ProductDTO productDTO) {
+    public ProductClientDTO saveProductDTONoImage(ProductDTO productDTO) {
+        Product product = productMapper.toProduct(productDTO);
+        ImageGallery imageDefault = imageService.findById(41L).get();
+        product.setImage(imageDefault);
 
-        System.out.println(productDTO.getId());
+        ProductClientDTO productClientDTO = productMapper.toProductClientDTO(productDTO);
+        productRepository.save(product);
+
+        productClientDTO.setId(product.getId());
+        productClientDTO.setCategory_name(categoryService.findById(productClientDTO.getCategory_id()).get().getCategoryName());
+        productClientDTO.setSubcategory_name(subcategoryService.findById(productDTO.getSubcategory_id()).get().getSubCategoryName());
+        productClientDTO.setFileUrl(imageDefault.getFileUrl());
+        productClientDTO.setCloudId(imageDefault.getCloudId());
+        productClientDTO.setFileName(imageDefault.getFileName());
+        productClientDTO.setFileFolder(imageDefault.getFileFolder());
+        productClientDTO.setDescription(productDTO.getDescription());
+        return productClientDTO;
+    }
+
+    @Override
+    public ProductClientDTO updateProductDTO(ProductDTO productDTO) {
 
         Optional<Product> product = productRepository.findById(productDTO.getId());
 
         Optional<ImageGallery> imageGallery = imageService.findById(product.get().getImage().getId());
 
-        System.out.println("image id : " + imageGallery.get().getId());
-
         ProductClientDTO productClientDTO = productMapper.toProductClientDTO(productDTO);
+        if (product.get().getImage().getId() == 41L) {
 
-        if (product.isPresent() && imageGallery.isPresent()) {
+            Product productUpdate = productMapper.toProduct(productDTO);
+
+            productUpdate.setId(product.get().getId());
+
+            ImageGallery imageGalleryUpdate = new ImageGallery();
+
+            imageGalleryUpdate.setFileName(productDTO.getMultipartFile().getOriginalFilename());
+
+            imageService.save(imageGalleryUpdate);
+
+            uploadAndSaveImage(productDTO, imageGalleryUpdate);
+
+            productUpdate.setImage(imageGalleryUpdate);
+
+            productRepository.save(productUpdate);
+
+            productClientDTO.setId(product.get().getId());
+            productClientDTO.setCategory_name(categoryService.findById(productClientDTO.getCategory_id()).get().getCategoryName());
+            productClientDTO.setSubcategory_name(subcategoryService.findById(productDTO.getSubcategory_id()).get().getSubCategoryName());
+            productClientDTO.setFileUrl(imageGalleryUpdate.getFileUrl());
+            productClientDTO.setCloudId(imageGalleryUpdate.getCloudId());
+            productClientDTO.setFileName(imageGalleryUpdate.getFileName());
+            productClientDTO.setFileFolder(imageGalleryUpdate.getFileFolder());
+            productClientDTO.setDescription(productDTO.getDescription());
+
+
+            return productClientDTO;
+
+        } else {
+
+
+            if (product.isPresent() && imageGallery.isPresent()) {
 
                 Product productUpdate = productMapper.toProduct(productDTO);
 
                 productUpdate.setId(product.get().getId());
 
-                deleteImage(product.get(),imageGallery.get().getId());
+                deleteImage(product.get(), imageGallery.get().getId());
 
                 ImageGallery imageGalleryUpdate = new ImageGallery();
 
@@ -142,6 +201,8 @@ public class ProductServiceImpl implements IProductService {
 
                 return productClientDTO;
             }
+
+        }
         return null;
     }
 
@@ -187,8 +248,6 @@ public class ProductServiceImpl implements IProductService {
         } catch (IOException e) {
             throw new RuntimeException("Can not delete this image");
         }
-
-
     }
 
     @Override
@@ -208,7 +267,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public void setProductDeletedIsFalseByCategoryId(Long id) {
-       productRepository.setProductDeletedIsFalseByCategoryId(id);
+        productRepository.setProductDeletedIsFalseByCategoryId(id);
     }
 
     @Override

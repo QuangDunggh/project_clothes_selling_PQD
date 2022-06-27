@@ -11,9 +11,15 @@ import java.util.Optional;
 
 public interface IProductService extends IGeneralService<Product> {
 
+    List<ProductClientDTO> findAllProductClientDTOLock();
+
+    List<ProductClientDTO> findProductClientDTOByCategoryId(Long id);
+
     Optional<ProductClientDTO> findProductClientDTOById(Long id);
 
     ProductClientDTO saveProductDTO(ProductDTO productDTO);
+
+    ProductClientDTO saveProductDTONoImage(ProductDTO productDTO);
 
     ProductClientDTO updateProductDTO(ProductDTO productDTO);
 

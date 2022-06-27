@@ -3,6 +3,7 @@ package com.cg.gu_project.utils;
 import com.cg.gu_project.Exception.DataInputException;
 import com.cg.gu_project.model.ImageGallery;
 import com.cg.gu_project.model.Product;
+import com.cg.gu_project.model.ProductsCombination;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,17 @@ public class UploadUtils {
 
     public Map buildImageDestroyParams(Product product, String publicId) {
         if (product == null || product.getId() == null)
+            throw new DataInputException("Không thể destroy hình ảnh của sản phẩm không xác định");
+
+        return ObjectUtils.asMap(
+                "public_id", publicId,
+                "overwrite", true,
+                "resource_type", "image"
+        );
+    }
+
+    public Map buildImageDestroyParamsProductCombination(ProductsCombination productsCombination, String publicId) {
+        if (productsCombination == null || productsCombination.getId() == null)
             throw new DataInputException("Không thể destroy hình ảnh của sản phẩm không xác định");
 
         return ObjectUtils.asMap(

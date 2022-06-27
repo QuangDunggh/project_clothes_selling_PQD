@@ -6,7 +6,6 @@ import com.cg.gu_project.repository.ProductStockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +15,6 @@ public class ProductsStockServiceImpl implements IProductsStockService {
 
     @Autowired
     private ProductStockRepository productStockRepository;
-
 
     @Override
     public List<ProductsStock> findAll() {
@@ -39,7 +37,34 @@ public class ProductsStockServiceImpl implements IProductsStockService {
     }
 
     @Override
+    public Optional<ProductsCombinationClientDTO> findProductsCombinationClientDTOById(Long id) {
+        return productStockRepository.findProductsCombinationClientDTOById(id);
+    }
+
+    @Override
     public List<ProductsCombinationClientDTO> findAllProductsCombinationClientDTO() {
         return productStockRepository.findAllProductsCombinationClientDTO();
     }
+
+    @Override
+    public List<ProductsCombinationClientDTO> findAllProductsCombinationClientDTOLock() {
+        return productStockRepository.findAllProductsCombinationClientDTOLock();
+    }
+
+    @Override
+    public List<ProductsCombinationClientDTO> findAllProductsCombinationClientDTOByProductId(Long id) {
+        return productStockRepository.findAllProductsCombinationClientDTOByProductId(id);
+    }
+
+    @Override
+    public void setDeletedTrueFollowProductId(Long id) {
+        productStockRepository.setDeletedTrueFollowProductId(id);
+    }
+
+    @Override
+    public void setDeletedFalseFollowProductId(Long id) {
+        setDeletedFalseFollowProductId(id);
+    }
+
+
 }

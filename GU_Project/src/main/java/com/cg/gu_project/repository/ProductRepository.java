@@ -45,9 +45,42 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "p.image.fileUrl," +
             "p.image.cloudId) " +
             "FROM Product p " +
+            "WHERE p.deleted = TRUE ")
+    List<ProductClientDTO> findAllProductClientDTOLock();
+
+    @Query("SELECT new com.cg.gu_project.dto.ProductClientDTO" +
+            "(p.id, " +
+            "p.title, " +
+            "p.category.id, " +
+            "p.category.categoryName, " +
+            "p.subcategory.id, " +
+            "p.subcategory.subCategoryName, " +
+            "p.description," +
+            "p.image.fileName," +
+            "p.image.fileFolder," +
+            "p.image.fileUrl," +
+            "p.image.cloudId) " +
+            "FROM Product p " +
             "WHERE p.deleted = FALSE " +
             "AND p.id=:id ")
     Optional<ProductClientDTO> findProductClientDTOById(@Param("id") Long id);
+
+    @Query("SELECT new com.cg.gu_project.dto.ProductClientDTO" +
+            "(p.id, " +
+            "p.title, " +
+            "p.category.id, " +
+            "p.category.categoryName, " +
+            "p.subcategory.id, " +
+            "p.subcategory.subCategoryName, " +
+            "p.description," +
+            "p.image.fileName," +
+            "p.image.fileFolder," +
+            "p.image.fileUrl," +
+            "p.image.cloudId) " +
+            "FROM Product p " +
+            "WHERE p.deleted = FALSE " +
+            "AND p.category.id=:id ")
+    List<ProductClientDTO> findProductClientDTOByCategoryId(@Param("id") Long id);
 
     Long countProductByCategoryId(Long category_id);
 

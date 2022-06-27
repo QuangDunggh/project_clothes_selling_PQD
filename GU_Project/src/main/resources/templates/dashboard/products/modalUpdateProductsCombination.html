@@ -1,41 +1,50 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<th:block th:fragment="modal-create-product">
-    <div class="modal fade" id="createProductModal" tabindex="-1">
+<th:block th:fragment="modal-update-products-combination">
+    <div class="modal fade" id="updateProductsCombinationModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Create new product</h5>
+                    <h5 class="modal-title">Update Variable</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="frmCreateProduct" enctype="multipart/form-data">
+                    <form id="frmUpdateProductCombination" enctype="multipart/form-data">
                         <fieldset class="row g-3">
                             <div class="mb-3 col-md-6">
                                 <div class="form-group row">
                                     <label class="col-sm-12 col-form-label">Title</label>
                                     <div class="col-sm-12">
-                                        <input type="text" id="productTitleCreate" name="productTitleCreate"
+                                        <input readonly type="text" id="productCombinationTitleUpdate" name="productCombinationTitleUpdate"
+                                               class="form-control"/>
+                                        <input type="hidden" id="productIdUpdate" name="productIdUpdate"
+                                               class="form-control"/>
+                                        <input type="hidden" id="productStockId" name="productStockId"
                                                class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <label class="col-sm-12 col-form-label">Category</label> <br>
-                                        <select class="form-select" id="categoryProductCreate"
-                                                name="categoryProductCreate"></select>
+                                        <label class="col-sm-12 col-form-label">Color</label> <br>
+                                        <select class="form-select" id="colorUpdate"  name="colorUpdate"></select>
                                     </div>
                                     <div class="col">
-                                        <label class="col-sm-12 col-form-label">Subcategory</label><br>
-                                        <select class="form-select" id="subcategoryProductCreate"
-                                                name="subcategoryProductCreate"></select>
+                                        <label class="col-sm-12 col-form-label">Size</label><br>
+                                        <select class="form-select" id="sizeUpdate" name="sizeUpdate"></select>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-12 col-form-label">Description</label>
-                                    <div class="col-sm-12">
-                                        <textarea name="descriptionProductCreate" id="descriptionProductCreate"
-                                                  cols="50" rows="4"></textarea>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm-12 col-form-label">Unit price</label> <br>
+                                        <input type="number" class="form-control" id="unitPriceUpdate"  name="unitPriceUpdate"/>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col-sm-12 col-form-label">Total stock</label> <br>
+                                        <input type="number" class="form-control" id="quantityStockUpdate"  name="quantityStockUpdate"/>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col-sm-12 col-form-label">Maximum Retail Price</label><br>
+                                        <input type="number" class="form-control" id="maximumRetailPriceUpdate" name="maximumRetailPriceUpdate"/>
                                     </div>
                                 </div>
                             </div>
@@ -44,7 +53,7 @@
                                     <div class="container">
                                         <div class="wrapper">
                                             <div class="image">
-                                                <img src="" alt="" id="imagePreviewCreate">
+                                                <img src="" alt="" id="imagePreviewProductsCombinationUpdate">
                                             </div>
                                             <div class="content">
                                                 <div class="icon">
@@ -54,6 +63,9 @@
                                                     No file chosen, yet!
                                                 </div>
                                             </div>
+                                            <div id="cancel-btn">
+                                                <i class="fas fa-times"></i>
+                                            </div>
                                             <div class="file-name">
                                                 File name here
                                             </div>
@@ -61,18 +73,18 @@
                                         <div class="row">
                                             <div class="col">
                                                 <button class="btn btn-outline-secondary buttonImage" type="button"
-                                                        id="imageFileBtnCreate">Choose a file
+                                                        id="imageFileBtnProductsCombinationUpdate">Choose a file
                                                 </button>
                                                 <br>
                                             </div>
                                             <div class="col">
                                                 <button class="btn btn-outline-danger buttonImage" type="button"
-                                                        id="cancelImageCreate">Remove
+                                                        id="cancelImageProductsCombinationUpdate">Remove
                                                     image
                                                 </button>
                                             </div>
 
-                                            <input id="imageFileCreate" type="file" accept="image/jpeg, image/png"
+                                            <input id="imageFileProductCombinationUpdate" type="file" accept="image/jpeg, image/png"
                                                    hidden>
                                         </div>
                                     </div>
@@ -83,12 +95,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="btnCreateProduct" class="btn btn-outline-primary">Create</button>
+                    <button type="button" id="btnUpdateProductCombination" class="btn btn-outline-warning">Update</button>
                 </div>
             </div>
         </div>
     </div>
-    <script>
 
-    </script>
+
 </th:block>

@@ -94,7 +94,7 @@
                             </button>
                         </div>
                         <br/>
-                        <div class="table-responsive">
+                        <div class="table-responsive" id="div-table">
                             <table id="example" class="table table-striped data-table table-hover"
                                    style="width: 100%">
                                 <thead class="t-head" id="tb-head" style="text-align: center">
@@ -131,6 +131,8 @@
 
 <th:block th:insert="/dashboard/products/table-product :: temp-products"/>
 
+<th:block th:insert="/dashboard/products/table-product-lock :: temp-products-lock"/>
+
 <th:block th:insert="/dashboard/products/table-category :: temp-categories"/>
 
 <th:block th:insert="/dashboard/products/table-category-lock :: temp-categories-lock"/>
@@ -149,7 +151,11 @@
 
 <th:block th:insert="/dashboard/products/modalCreateProductCombination :: modal-create-products-combination"/>
 
+<th:block th:insert="/dashboard/products/modalUpdateProductsCombination :: modal-update-products-combination"/>
+
 <th:block th:insert="/dashboard/products/table-stocks :: temp-products-stocks"/>
+
+<th:block th:insert="/dashboard/products/table-stocks-lock :: temp-products-stocks-lock"/>
 
 <th:block th:include="/dashboard/layout/scripts :: script"/>
 
@@ -164,18 +170,24 @@
             getSize: "http://localhost:8086/api/stock/showAllSize",
             getProductById: "http://localhost:8086/api/product/getProductById/",
             getAllProduct: "http://localhost:8086/api/product/showAll",
+            getAllProductLock: "http://localhost:8086/api/product/showAllLock",
+            getAllProductByCategoryId: "http://localhost:8086/api/product/showProductByCategoryId/",
             getCategoryById: "http://localhost:8086/api/category/findById/",
             getAllCategory: "http://localhost:8086/api/category/showAllCategory",
             getAllCategoryLock: "http://localhost:8086/api/category/getAllCategoryLock/",
             getAllProductsStock: "http://localhost:8086/api/stock/showAllProductsCombination",
+            getAllProductsCombinationLock: "http://localhost:8086/api/stock/showAllProductsCombinationLock/",
+            findProductsCombinationById: "http://localhost:8086/api/stock/findById/",
             getAllSubcategory: "http://localhost:8086/api/subcategory/showAllSubcategory",
             getAllSubcategoryByCategoryId: "http://localhost:8086/api/subcategory/showAllSubcategoryByCategory_id/",
             getAllSubcategoryLock: "http://localhost:8086/api/subcategory/showAllSubcategoryLock/",
             getSubcategoryById: "http://localhost:8086/api/subcategory/findById/",
             doCreateProduct: "http://localhost:8086/api/product/createProduct",
+            doCreateProductNoImage: "http://localhost:8086/api/product/createProductNoImage",
             doUpdateProduct: "http://localhost:8086/api/product/updateProduct/",
             doUpdateProductNoImage: "http://localhost:8086/api/product/updateProductNoImage/",
             doSuspensionProduct: "http://localhost:8086/api/product/suspensionProduct/",
+            doRestoreProduct: "http://localhost:8086/api/product/doRestoreProduct/",
             createCategory: "http://localhost:8086/api/category/createCategory",
             doUpdateCategory: "http://localhost:8086/api/category/updateCategory/",
             doSuspensionCategory: "http://localhost:8086/api/category/suspensionCategory/",
@@ -185,6 +197,10 @@
             doSuspensionSubcategory: "http://localhost:8086/api/subcategory/suspensionSubcategory/",
             doRestoreSubcategory: "http://localhost:8086/api/subcategory/doRestoreSubcategory/",
             doCreateProductCombination: "http://localhost:8086/api/stock/createProductsCombination",
+            doCreateProductCombinationNoImage: "http://localhost:8086/api/stock/createProductsCombinationNoImage/",
+            doUpdateProductCombinationNoImage: "http://localhost:8086/api/stock/updateProductsCombinationNoImage/",
+            doUpdateProductCombination: "http://localhost:8086/api/stock/updateProductsCombination/",
+            getAllProductsCombinationByProductId: "http://localhost:8086/api/stock/showProductsCombinationByProductId/"
 
         },
         element: {},
@@ -210,7 +226,11 @@
 
     let tempProduct = $.validator.format($.trim($("#tempProduct").val()));
 
-    let tempProductsCombination = $.validator.format($.trim($("#tempProductsStock").val()))
+    let tempProductLock = $.validator.format($.trim($("#tempProductLock").val()));
+
+    let tempProductsCombination = $.validator.format($.trim($("#tempProductsStock").val()));
+
+    let tempProductsCombinationLock = $.validator.format($.trim($("#tempProductsStockLock").val()));
 
     let tempCategory = $.validator.format($.trim($("#tempCategories").val()));
 
@@ -229,11 +249,24 @@
         $("#tb-show").prepend($(tempProduct(product.id, product.title, product.category_name, product.subcategory_name, product.description, image_thumbnail)));
     }
 
+    let addRowProductLock = () => {
+        let image_thumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + product.fileFolder + "/" + product.fileName;
+
+        $("#tb-show").prepend($(tempProductLock(product.id, product.title, product.category_name, product.subcategory_name, product.description, image_thumbnail)));
+    }
+
     let addRowProductCombination = () => {
         let image_thumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + productsCombination.fileFolder + "/" + productsCombination.fileName;
 
         $("#tb-show").prepend($(tempProductsCombination(productsCombination.id, productsCombination.combination_string, productsCombination.product_title,
-            productsCombination.total_stock, productsCombination.unit_price, productsCombination.maximum_retail_price, image_thumbnail)));
+            productsCombination.total_stock, formatMoney(productsCombination.unit_price), formatMoney(productsCombination.maximum_retail_price), image_thumbnail)));
+    }
+
+    let addRowProductCombinationLock = () => {
+        let image_thumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + productsCombination.fileFolder + "/" + productsCombination.fileName;
+
+        $("#tb-show").prepend($(tempProductsCombinationLock(productsCombination.id, productsCombination.combination_string, productsCombination.product_title,
+            productsCombination.total_stock, formatMoney(productsCombination.unit_price), formatMoney(productsCombination.maximum_retail_price), image_thumbnail)));
     }
 
     let addRowCategory = () => {
@@ -256,6 +289,7 @@
     let addRowOption = (element, id, name) => {
         $(element).prepend($(tempOption(id, name)));
     }
+
 
     function findProductById(id) {
         return $.ajax({
@@ -307,83 +341,26 @@
             })
     }
 
-    function loadProduct() {
+    function findProductsCombinationById(id) {
         return $.ajax({
             type: "GET",
             headers: {
                 "Content-Type": "Application/json",
                 "Accept": "Application/json"
             },
-            url: page.urls.getAllProduct,
+            url: page.urls.findProductsCombinationById + id
         })
             .done(function (data) {
-                $("#tableOfContents").html("Products");
-
-                $(".btn-add").attr("id", "createProduct");
-
-                $(".btn-add").removeClass("hide");
-
-                $("#addContent").html("Add new product");
-
-                $("#tb-show").html("");
-                $("#tb-head").html(" <tr>\n" +
-                    "                          <th class='text-center'>Title</th>\n" +
-                    "                          <th class='text-center'>Category</th>\n" +
-                    "                          <th class='text-center'>Subcategory</th>\n" +
-                    "                          <th class='text-center'>Description</th>\n" +
-                    "                          <th class='text-center'>Image</th>\n" +
-                    "                          <th style=\"text-align: center \">Action</th>\n" +
-                    "                                </tr>");
-
-                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
-                    "                                    <th class='text-center'>Title</th>\n" +
-                    "                                    <th class='text-center'>Category</th>\n" +
-                    "                                    <th class='text-center'>Subcategory</th>\n" +
-                    "                                    <th class='text-center'>Description</th>\n" +
-                    "                                    <th class='text-center'>Image</th>\n" +
-                    "                                    <th style=\"text-align: center \">Action</th>\n" +
-                    "                                </tr>")
-                data.forEach(item => {
-                    product = item;
-                    addRowProduct();
-                })
-
-                $("#example").DataTable()
-                App.IziToast.showSuccessAlert("Load product successful!!!")
-
+                productsCombination = data
             })
             .fail(function (jqXHR) {
-                $("#tableOfContents").html("Products");
-
-                $(".btn-add").attr("id", "createProduct");
-
-                $(".btn-add").removeClass("hide");
-
-                $("#addContent").html("Add new product");
-
-                $("#tb-show").html("");
-                $("#tb-head").html(" <tr style=\"text-align: center\">\n" +
-                    "                          <th class='text-center'>Title</th>\n" +
-                    "                          <th class='text-center'>Category</th>\n" +
-                    "                          <th class='text-center'>Subcategory</th>\n" +
-                    "                          <th class='text-center'>Description</th>\n" +
-                    "                          <th class='text-center'>Image</th>\n" +
-                    "                          <th style=\"text-align: center \">Action</th>\n" +
-                    "                                </tr>");
-
-                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
-                    "                                    <th class='text-center'>Title</th>\n" +
-                    "                                    <th class='text-center'>Category</th>\n" +
-                    "                                    <th class='text-center'>Subcategory</th>\n" +
-                    "                                    <th class='text-center'>Description</th>\n" +
-                    "                                    <th class='text-center'>Image</th>\n" +
-                    "                                    <th style=\"text-align: center \">Action</th>\n" +
-                    "                                </tr>")
                 console.log(jqXHR);
-                App.SweetAlert.showErrorAlert("Can not found product!!!");
-                handleGroupModal();
+
+                App.SweetAlert.showErrorAlert("Can not find this variable!!!");
             })
+
     }
+
 
     function drawCategory(element) {
         return $.ajax({
@@ -447,7 +424,6 @@
             .done(function (data) {
                 data.forEach(item => {
                     color = item;
-
                     addRowOption(element, color.id, color.color_name);
                 })
             })
@@ -458,7 +434,7 @@
     }
 
     function drawSize(element) {
-        $.ajax({
+        return $.ajax({
             type: "GET",
             headers: {
                 "Content-Type": "Application/json",
@@ -469,7 +445,6 @@
             .done(function (data) {
                 data.forEach(item => {
                     size = item;
-
                     addRowOption(element, size.id, size.size_name);
                 })
             })
@@ -477,6 +452,289 @@
                 console.log(jqXHR);
 
                 App.IziToast.showErrorAlert("Can not load size")
+            })
+    }
+
+    function loadProduct() {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllProduct,
+        })
+            .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`);
+
+                $("#tableOfContents").html("Products");
+
+                $(".btn-add").attr("id", "createProduct");
+
+                $(".btn-add").removeClass("hide");
+
+                $("#addContent").html("Add new product");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(" <tr>\n" +
+                    "                          <th class='text-center'>Title</th>\n" +
+                    "                          <th class='text-center'>Category</th>\n" +
+                    "                          <th class='text-center'>Subcategory</th>\n" +
+                    "                          <th class='text-center'>Description</th>\n" +
+                    "                          <th class='text-center'>Image</th>\n" +
+                    "                          <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
+                    "                                    <th class='text-center'>Title</th>\n" +
+                    "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Subcategory</th>\n" +
+                    "                                    <th class='text-center'>Description</th>\n" +
+                    "                                    <th class='text-center'>Image</th>\n" +
+                    "                                    <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+                data.forEach(item => {
+                    product = item;
+                    addRowProduct();
+                })
+
+                $("#example").DataTable()
+
+            })
+            .fail(function (jqXHR) {
+                $("#tableOfContents").html("Products");
+
+                $(".btn-add").attr("id", "createProduct");
+
+                $(".btn-add").removeClass("hide");
+
+                $("#addContent").html("Add new product");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(" <tr style=\"text-align: center\">\n" +
+                    "                          <th class='text-center'>Title</th>\n" +
+                    "                          <th class='text-center'>Category</th>\n" +
+                    "                          <th class='text-center'>Subcategory</th>\n" +
+                    "                          <th class='text-center'>Description</th>\n" +
+                    "                          <th class='text-center'>Image</th>\n" +
+                    "                          <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
+                    "                                    <th class='text-center'>Title</th>\n" +
+                    "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Subcategory</th>\n" +
+                    "                                    <th class='text-center'>Description</th>\n" +
+                    "                                    <th class='text-center'>Image</th>\n" +
+                    "                                    <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+                console.log(jqXHR);
+                App.SweetAlert.showErrorAlert("Can not found product!!!");
+                handleGroupModal();
+            })
+    }
+
+    function loadProductLock() {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllProductLock
+        })
+            .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
+                $("#tableOfContents").html("Products");
+
+                $(".btn-add").attr("id", "createProduct");
+
+                $(".btn-add").removeClass("hide");
+
+                $("#addContent").html("Add new product");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(" <tr>\n" +
+                    "                          <th class='text-center'>Title</th>\n" +
+                    "                          <th class='text-center'>Category</th>\n" +
+                    "                          <th class='text-center'>Subcategory</th>\n" +
+                    "                          <th class='text-center'>Description</th>\n" +
+                    "                          <th class='text-center'>Image</th>\n" +
+                    "                          <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
+                    "                                    <th class='text-center'>Title</th>\n" +
+                    "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Subcategory</th>\n" +
+                    "                                    <th class='text-center'>Description</th>\n" +
+                    "                                    <th class='text-center'>Image</th>\n" +
+                    "                                    <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+
+                data.forEach(item => {
+                    product = item;
+                    addRowProductLock();
+                });
+
+                $("#example").DataTable();
+
+            })
+            .fail(function (jqXHR) {
+
+                console.log(jqXHR);
+
+                $("#tableOfContents").html("Products");
+
+                $(".btn-add").attr("id", "createProduct");
+
+                $(".btn-add").removeClass("hide");
+
+                $("#addContent").html("Add new product");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(" <tr>\n" +
+                    "                          <th class='text-center'>Title</th>\n" +
+                    "                          <th class='text-center'>Category</th>\n" +
+                    "                          <th class='text-center'>Subcategory</th>\n" +
+                    "                          <th class='text-center'>Description</th>\n" +
+                    "                          <th class='text-center'>Image</th>\n" +
+                    "                          <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
+                    "                                    <th class='text-center'>Title</th>\n" +
+                    "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Subcategory</th>\n" +
+                    "                                    <th class='text-center'>Description</th>\n" +
+                    "                                    <th class='text-center'>Image</th>\n" +
+                    "                                    <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+                App.SweetAlert.showErrorAlert("Can not load product lock!!!")
+            })
+    }
+
+    function loadProductByCategoryId(id) {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllProductByCategoryId + id
+        })
+            .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
+                $("#tableOfContents").html("Products");
+
+                $(".btn-add").attr("id", "createProduct");
+
+                $(".btn-add").removeClass("hide");
+
+                $("#addContent").html("Add new product");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(" <tr>\n" +
+                    "                          <th class='text-center'>Title</th>\n" +
+                    "                          <th class='text-center'>Category</th>\n" +
+                    "                          <th class='text-center'>Subcategory</th>\n" +
+                    "                          <th class='text-center'>Description</th>\n" +
+                    "                          <th class='text-center'>Image</th>\n" +
+                    "                          <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
+                    "                                    <th class='text-center'>Title</th>\n" +
+                    "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Subcategory</th>\n" +
+                    "                                    <th class='text-center'>Description</th>\n" +
+                    "                                    <th class='text-center'>Image</th>\n" +
+                    "                                    <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+
+                data.forEach(item => {
+                    product = item;
+                    addRowProductLock();
+                });
+
+                $("#example").DataTable();
+            })
+            .fail(function (jqXHR) {
+                $("#tableOfContents").html("Products");
+
+                $(".btn-add").attr("id", "createProduct");
+
+                $(".btn-add").removeClass("hide");
+
+                $("#addContent").html("Add new product");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(" <tr style=\"text-align: center\">\n" +
+                    "                          <th class='text-center'>Title</th>\n" +
+                    "                          <th class='text-center'>Category</th>\n" +
+                    "                          <th class='text-center'>Subcategory</th>\n" +
+                    "                          <th class='text-center'>Description</th>\n" +
+                    "                          <th class='text-center'>Image</th>\n" +
+                    "                          <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>");
+
+                $("#tb-footer").html("  <tr style=\"text-align: center\">\n" +
+                    "                                    <th class='text-center'>Title</th>\n" +
+                    "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Subcategory</th>\n" +
+                    "                                    <th class='text-center'>Description</th>\n" +
+                    "                                    <th class='text-center'>Image</th>\n" +
+                    "                                    <th style=\"text-align: center \">Action</th>\n" +
+                    "                                </tr>")
+                console.log(jqXHR);
+                App.SweetAlert.showErrorAlert("Can not found product!!!");
             })
     }
 
@@ -490,6 +748,23 @@
             url: page.urls.getAllCategory,
         })
             .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`);
+
                 $("#tableOfContents").html("CATEGORIES");
 
                 $(".btn-add").attr("id", "createCategory");
@@ -518,7 +793,6 @@
                 })
 
                 $("#example").DataTable()
-                App.IziToast.showSuccessAlert("Load list category successful!!! ");
 
             })
             .fail(function (jqXHR) {
@@ -561,8 +835,25 @@
             url: page.urls.getAllCategoryLock,
         })
             .done(function (data) {
-                $("#tableOfContents").html("CATEGORIES LOCK");
+                $("#div-table").html("");
 
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
+                $("#tableOfContents").html("CATEGORIES LOCK");
+                // Quang required cment
                 $(".btn-add").addClass("hide");
 
                 $("#tb-show").html("");
@@ -570,12 +861,14 @@
                 $("#tb-head").html("  <tr style='text-align: center'>\n" +
                     "                                    <th class='text-center'>#</th>\n" +
                     "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Quantity product</th>\n" +
                     "                                    <th style=\"text-align: center \">Action</th>\n" +
                     "                                </tr>");
 
                 $("#tb-footer").html("  <tr style='text-align: center'>\n" +
                     "                                    <th class='text-center'>#</th>\n" +
                     "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Quantity product</th>\n" +
                     "                                    <th style=\"text-align: center \">Action</th>\n" +
                     "                                </tr>")
                 data.forEach(item => {
@@ -583,8 +876,6 @@
 
                     addRowCategoryLock();
                 })
-
-                App.IziToast.showSuccessAlert("Load categories lock successful")
                 $("#example").DataTable();
 
             })
@@ -598,12 +889,14 @@
                 $("#tb-head").html("  <tr style='text-align: center'>\n" +
                     "                                    <th class='text-center'>#</th>\n" +
                     "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Quantity product</th>\n" +
                     "                                    <th style=\"text-align: center \">Action</th>\n" +
                     "                                </tr>");
 
                 $("#tb-footer").html("  <tr style='text-align: center'>\n" +
                     "                                    <th class='text-center'>#</th>\n" +
-                    "                                    <th>Category</th>\n" +
+                    "                                    <th class='text-center'>Category</th>\n" +
+                    "                                    <th class='text-center'>Quantity product</th>\n" +
                     "                                    <th style=\"text-align: center \">Action</th>\n" +
                     "                                </tr>")
                 console.log(jqXHR);
@@ -621,6 +914,23 @@
             url: page.urls.getAllSubcategory,
         })
             .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
                 $("#tableOfContents").html("SUBCATEGORIES");
 
                 $(".btn-add").attr("id", "createSubcategory");
@@ -647,7 +957,8 @@
                     subcategory = item;
                     addRowSubcategory();
                 })
-                App.IziToast.showSuccessAlert("Load subcategory successful!!!")
+
+                $("#example").DataTable();
             })
             .fail(function (jqXHR) {
                 $("#tableOfContents").html("SUBCATEGORIES");
@@ -687,6 +998,23 @@
             url: page.urls.getAllSubcategoryLock
         })
             .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
                 $("#tableOfContents").html("SUBCATEGORIES LOCK");
 
                 $(".btn-add").addClass("hide");
@@ -696,20 +1024,21 @@
                     "                                    <th class='text-center'>#</th>\n" +
                     "                                    <th class='text-center'>Subcategory</th>\n" +
                     "                                    <th class='text-center'>Category</th>\n" +
-                    "                                    <th style=\"text-align: center \">Action</th>\n" +
+                    "                                    <th class='text-center'>Action</th>\n" +
                     "                                </tr>`);
 
                 $("#tb-footer").html(`  <tr style='text-align: center'>\n" +
                     "                                    <th class='text-center'>#</th>\n" +
                     "                                    <th class='text-center'>Subcategory</th>\n" +
                     "                                    <th class='text-center'>Category</th>\n" +
-                    "                                    <th style=\"text-align: center \">Action</th>\n" +
+                    "                                    <th class='text-center'>Action</th>\n" +
                     "                                </tr>`)
                 data.forEach(item => {
                     subcategory = item;
                     addRowSubcategoryLock();
                 })
-                App.IziToast.showSuccessAlert("Load list subcategory lock successful!!!")
+
+                $("#example").DataTable();
             })
             .fail(function (jqXHR) {
                 $("#tableOfContents").html("SUBCATEGORIES LOCK");
@@ -747,10 +1076,35 @@
             url: page.urls.getAllProductsStock
         })
             .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
+                $("#tableOfContents").html("Product stock");
+
+                $(".btn-add").attr("id", "createSubcategory");
+
+                $(".btn-add").addClass("hide");
+
+                $("#addContent").html("Add new subcategory");
+
                 $("#tb-show").html("");
                 $("#tb-head").html(`<tr>
                                         <th class='text-center'>Name variable</th>
-                                        <th class='text-center'>Name product</th>
+                                        <th class='text-center'>Title product</th>
                                         <th class='text-center'>Total stock</th>
                                         <th class='text-center'>Unit price</th>
                                         <th class='text-center'>MRP</th>
@@ -760,20 +1114,38 @@
 
                 $("#tb-footer").html(`<tr>
                                         <th class='text-center'>Name variable</th>
-                                        <th class='text-center'>Name product</th>
+                                        <th class='text-center'>Title product</th>
                                         <th class='text-center'>Total stock</th>
                                         <th class='text-center'>Unit price</th>
                                         <th class='text-center'>MRP</th>
                                         <th class='text-center'>Image</th>
                                         <th>Action</th>
                                     </tr>`)
+
+                data.forEach(item => {
+                    console.log(item)
+                    productsCombination = item;
+
+                    addRowProductCombination();
+                })
+
+                $("#example").DataTable();
+
             })
             .fail(function (jxQHR) {
+
+                $("#tableOfContents").html("Product stock");
+
+                $(".btn-add").attr("id", "createSubcategory");
+
+                $(".btn-add").addClass("hide");
+
+                $("#addContent").html("Add new subcategory");
                 console.log(jxQHR)
                 $("#tb-show").html("");
                 $("#tb-head").html(`<tr>
                                         <th class='text-center'>Name variable</th>
-                                        <th class='text-center'>Name product</th>
+                                        <th class='text-center'>Title product</th>
                                         <th class='text-center'>Total stock</th>
                                         <th class='text-center'>Unit price</th>
                                         <th class='text-center'>MRP</th>
@@ -783,7 +1155,7 @@
 
                 $("#tb-footer").html(`<tr>
                                         <th class='text-center'>Name variable</th>
-                                        <th class='text-center'>Name product</th>
+                                        <th class='text-center'>Title product</th>
                                         <th class='text-center'>Total stock</th>
                                         <th class='text-center'>Unit price</th>
                                         <th class='text-center'>MRP</th>
@@ -795,12 +1167,244 @@
             })
     }
 
+    function loadProductStockByProductId(id) {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllProductsCombinationByProductId + id
+        })
+            .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
+                $("#tableOfContents").html("Product stock");
+
+                $(".btn-add").attr("id", "createSubcategory");
+
+                $(".btn-add").addClass("hide");
+
+                $("#addContent").html("Add new subcategory");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(`<tr>
+                                        <th class='text-center'>Name variable</th>
+                                        <th class='text-center'>Title product</th>
+                                        <th class='text-center'>Total stock</th>
+                                        <th class='text-center'>Unit price</th>
+                                        <th class='text-center'>MRP</th>
+                                        <th class='text-center'>Image</th>
+                                        <th class='text-center'>Action</th>
+                                    </tr>`);
+
+                $("#tb-footer").html(`<tr>
+                                        <th class='text-center'>Name variable</th>
+                                        <th class='text-center'>Title product</th>
+                                        <th class='text-center'>Total stock</th>
+                                        <th class='text-center'>Unit price</th>
+                                        <th class='text-center'>MRP</th>
+                                        <th class='text-center'>Image</th>
+                                        <th class='text-center'>Action</th>
+                                    </tr>`)
+
+                data.forEach(item => {
+                    productsCombination = item;
+
+                    addRowProductCombination();
+                })
+                $("#example").DataTable();
+            })
+            .fail(function (jqXHR) {
+                console.log(jqXHR);
+
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
+                $("#tableOfContents").html("Product stock");
+
+                $(".btn-add").attr("id", "createSubcategory");
+
+                $(".btn-add").addClass("hide");
+
+                $("#addContent").html("Add new subcategory");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(`<tr>
+                                        <th class='text-center'>Name variable</th>
+                                        <th class='text-center'>Title product</th>
+                                        <th class='text-center'>Total stock</th>
+                                        <th class='text-center'>Unit price</th>
+                                        <th class='text-center'>MRP</th>
+                                        <th class='text-center'>Image</th>
+                                        <th class='text-center'>Action</th>
+                                    </tr>`);
+
+                $("#tb-footer").html(`<tr>
+                                        <th class='text-center'>Name variable</th>
+                                        <th class='text-center'>Title product</th>
+                                        <th class='text-center'>Total stock</th>
+                                        <th class='text-center'>Unit price</th>
+                                        <th class='text-center'>MRP</th>
+                                        <th class='text-center'>Image</th>
+                                        <th class='text-center'>Action</th>
+                                    </tr>`)
+
+                App.SweetAlert.showErrorAlert("Can not load this stock")
+            })
+    }
+
+    function loadProductStockLock() {
+        return $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getAllProductsCombinationLock
+        })
+            .done(function (data) {
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
+                $("#tableOfContents").html("Product stock");
+
+                $(".btn-add").addClass("hide");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(`<tr>
+                                        <th class='text-center'>Name variable</th>
+                                        <th class='text-center'>Title product</th>
+                                        <th class='text-center'>Total stock</th>
+                                        <th class='text-center'>Unit price</th>
+                                        <th class='text-center'>MRP</th>
+                                        <th class='text-center'>Image</th>
+                                        <th class='text-center'>Action</th>
+                                    </tr>`);
+
+                $("#tb-footer").html(`<tr>
+                                        <th class='text-center'>Name variable</th>
+                                        <th class='text-center'>Title product</th>
+                                        <th class='text-center'>Total stock</th>
+                                        <th class='text-center'>Unit price</th>
+                                        <th class='text-center'>MRP</th>
+                                        <th class='text-center'>Image</th>
+                                        <th class='text-center'>Action</th>
+                                    </tr>`)
+
+                data.forEach(item => {
+                    console.log(item)
+                    productsCombination = item;
+
+                    addRowProductCombinationLock();
+                })
+
+                $("#example").DataTable();
+            })
+            .fail(function (jqXHR) {
+
+                console.log(jqXHR);
+
+                $("#div-table").html("");
+
+                $("#div-table").html(` <table id="example" class="table table-striped data-table table-hover"
+                                   style="width: 100%">
+                                <thead class="t-head" id="tb-head">
+
+                                </thead>
+
+                                <tbody id="tb-show">
+
+                                </tbody>
+
+                                <tfoot id="tb-footer" style="text-align: center">
+
+                                </tfoot>
+                            </table>`)
+
+                $("#tableOfContents").html("Product stock");
+
+                $(".btn-add").attr("id", "createSubcategory");
+
+                $(".btn-add").addClass("hide");
+
+                $("#addContent").html("Add new subcategory");
+
+                $("#tb-show").html("");
+                $("#tb-head").html(`<tr>
+                                        <th class='text-center'>Name variable</th>
+                                        <th class='text-center'>Title product</th>
+                                        <th class='text-center'>Total stock</th>
+                                        <th class='text-center'>Unit price</th>
+                                        <th class='text-center'>MRP</th>
+                                        <th class='text-center'>Image</th>
+                                        <th class='text-center'>Action</th>
+                                    </tr>`);
+
+                $("#tb-footer").html(`<tr>
+                                        <th class='text-center'>Name variable</th>
+                                        <th class='text-center'>Title product</th>
+                                        <th class='text-center'>Total stock</th>
+                                        <th class='text-center'>Unit price</th>
+                                        <th class='text-center'>MRP</th>
+                                        <th class='text-center'>Image</th>
+                                        <th class='text-center'>Action</th>
+                                    </tr>`)
+
+                App.SweetAlert.showErrorAlert("Can not load stock lock")
+            })
+    }
+
     function handleGroupModal() {
         handlePreviewProductCreate();
         handleRemoveImageProductCreate();
         handlePreviewProductUpdate();
         handleRemoveImageProductUpdate();
         handleLoadProduct();
+        handleLoadProductLock();
         handleLoadCategoryLock();
         handleCreateProductModal();
         handleCreateCategoryModal();
@@ -809,6 +1413,7 @@
         handleLoadSubcategory();
         handleUpdateProductModal();
         handleCreateProductsCombination();
+        handleUpdateProductsCombination();
         handleLoadProductsStock();
         handleUpdateCategoryModal();
         handleUpdateSubcategoryModal();
@@ -818,6 +1423,12 @@
         handleSuspensionSubcategoryModal();
         handleLoadSubcategoryLock();
         handleRestoreSubcategoryModal();
+        handlePreviewProductCombinationCreate();
+        handleRemoveImageProductCombinationCreate();
+        handleRestoreProductModal();
+        handleLoadProductsCombinationByProductId();
+        handleLoadProductByCategoryId();
+        handleLoadProductsStockLock();
     }
 
     //Handle button
@@ -828,9 +1439,35 @@
         })
     }
 
+    function handleLoadProductLock() {
+        $("#showProductLock").on("click", function () {
+            loadProductLock();
+        })
+    }
+
+    function handleLoadProductByCategoryId() {
+        $("#div-table").on("click", ".btn-show-products-by-category", function () {
+            let id = $(this).data("id");
+            loadProductByCategoryId(id);
+        })
+    }
+
     function handleLoadProductsStock() {
         $("#showAllStock").on("click", function () {
             loadProductsStock();
+        })
+    }
+
+    function handleLoadProductsStockLock() {
+        $("#showStockLock").on("click", function () {
+            loadProductStockLock();
+        })
+    }
+
+    function handleLoadProductsCombinationByProductId() {
+        $("#div-table").on("click", ".btn-show-products-combination-by-id", function () {
+            let id = $(this).data("id");
+            loadProductStockByProductId(id);
         })
     }
 
@@ -845,7 +1482,7 @@
     }
 
     function handleUpdateProductModal() {
-        $("#tb-show").on("click", ".btn-updateProduct", function () {
+        $("#div-table").on("click", ".btn-updateProduct", function () {
             let id = $(this).data("id");
             drawCategory("#categoryProductUpdate").then(function () {
                 findProductById(id).then(function () {
@@ -868,13 +1505,24 @@
     }
 
     function handleSuspensionProductModal() {
-        $("#tb-show").on("click", ".btn-suspension-product", function () {
+        $("#div-table").on("click", ".btn-suspension-product", function () {
             App.SweetAlert.ShowConfirmSuspend("Do you want to lock this product?").then(result => {
                 if (result.isConfirmed) {
                     let id = $(this).data("id");
 
                     product.id = id;
                     doSuspensionProduct(id);
+                }
+            })
+        })
+    }
+
+    function handleRestoreProductModal() {
+        $("#div-table").on("click", ".btn-restoreProduct", function () {
+            App.SweetAlert.ShowConfirmSuspend("Do you want restore this product?").then(result => {
+                if (result.isConfirmed) {
+                    let id = $(this).data("id");
+                    doRestoreProduct(id);
                 }
             })
         })
@@ -887,7 +1535,7 @@
     }
 
     function handleUpdateCategoryModal() {
-        $("#tb-show").on("click", ".btn-updateCategory", function () {
+        $("#div-table").on("click", ".btn-updateCategory", function () {
             let id = $(this).data("id");
             findCategoryById(id).then(function () {
                 category.id = id;
@@ -901,7 +1549,7 @@
     }
 
     function handelSuspensionCategoryModal() {
-        $("#tb-show").on("click", ".btn-suspension-category", function () {
+        $("#div-table").on("click", ".btn-suspension-category", function () {
             App.SweetAlert.ShowConfirmSuspend("Do you want lock this category").then(result => {
                 if (result.isConfirmed) {
                     let id = $(this).data("id");
@@ -916,7 +1564,7 @@
     }
 
     function handleRestoreCategoryModal() {
-        $("#tb-show").on("click", ".btn-restore-category", function () {
+        $("#div-table").on("click", ".btn-restore-category", function () {
             App.SweetAlert.ShowConfirmSuspend("Do you want to restore this category").then(result => {
                 if (result.isConfirmed) {
                     let id = $(this).data("id");
@@ -960,7 +1608,7 @@
     }
 
     function handleUpdateSubcategoryModal() {
-        $("#tb-show").on("click", ".btn-updateSubcategory", function () {
+        $("#div-table").on("click", ".btn-updateSubcategory", function () {
             let id = $(this).data("id");
             findSubcategoryById(id).then(function () {
                 console.log(subcategory);
@@ -978,7 +1626,7 @@
     }
 
     function handleSuspensionSubcategoryModal() {
-        $("#tb-show").on("click", ".btn-suspension-subcategory", function () {
+        $("#div-table").on("click", ".btn-suspension-subcategory", function () {
             App.SweetAlert.ShowConfirmSuspend("Do you want to lock this subcategory?").then(result => {
                 if (result.isConfirmed) {
                     let id = $(this).data("id");
@@ -992,7 +1640,7 @@
     }
 
     function handleRestoreSubcategoryModal() {
-        $("#tb-show").on("click", ".btn-restore-subcategory", function () {
+        $("#div-table").on("click", ".btn-restore-subcategory", function () {
             App.SweetAlert.ShowConfirmSuspend("Do you want to restore this subcategory").then(result => {
                 if (result.isConfirmed) {
                     let id = $(this).data("id");
@@ -1004,26 +1652,52 @@
     }
 
     function handleCreateProductsCombination() {
-        $("#tb-show").on("click", ".btn-createProductCombination", function () {
-            let id = $(this).data("id");
-            $("#categoryProductCombinationCreate").html("");
-            $("#subcategoryProductCombinationCreate").html("");
-            console.log(id)
-            findProductById(id).then(function () {
+        $("#div-table").on("click", ".btn-createProductCombination", function () {
+                let id = $(this).data("id");
+                $("#colorCreate").empty();
+                $("#sizeCreate").empty();
+                findProductById(id).then(function () {
 
-                $("#productCombinationTitleCreate").val(product.title);
+                        $("#productCombinationTitleCreate").val(product.title);
 
-                drawCategory("#categoryProductCombinationCreate").then(function () {
-                    $("#categoryProductCombinationCreate").val(product.category_id);
-                    drawSubCategory("#subcategoryProductCombinationCreate","#categoryProductCombinationCreate").then(function () {
+
+                        $("#categoryProductCombinationCreate").val(product.category_id);
+
                         $("#subcategoryProductCombinationCreate").val(product.subcategory_id);
                         drawColor("#colorCreate");
                         drawSize("#sizeCreate");
                         $("#productIdCreate").val(product.id);
                         $("#createProductsCombinationModal").modal("show");
-                    });
-                })
 
+                    }
+                )
+            }
+        )
+    }
+
+    function handleUpdateProductsCombination() {
+        $("#div-table").on("click", ".btn-updateProductsCombination", function () {
+            let id = $(this).data("id");
+            $("#sizeUpdate").empty();
+            $("#colorUpdate").empty();
+            // Mr Quang required commnet
+            findProductsCombinationById(id).then(function () {
+                productsCombination.id = id;
+                $("#productStockId").val(id)
+                $("#productIdUpdate").val(productsCombination.product_id);
+                $("#productCombinationTitleUpdate").val(productsCombination.product_title);
+                $("#unitPriceUpdate").val(productsCombination.unit_price);
+                $("#quantityStockUpdate").val(productsCombination.total_stock);
+                $("#maximumRetailPriceUpdate").val(productsCombination.maximum_retail_price);
+                $("#imagePreviewProductsCombinationUpdate").attr("src", productsCombination.fileUrl);
+
+                drawSize("#sizeUpdate").then(function () {
+                    findValueColor(productsCombination.combination_string, "#colorUpdate");
+                });
+                drawColor("#colorUpdate").then(function () {
+                    findValueSize(productsCombination.combination_string, "#sizeUpdate");
+                });
+                $("#updateProductsCombinationModal").modal("show");
             })
         })
     }
@@ -1076,7 +1750,7 @@
                 category = data;
                 let currentRow = $("#tr_category_" + category.id);
 
-                let updateRow = $(tempCategory(category.id, category.categoryName));
+                let updateRow = $(tempCategory(category.id, category.categoryName, category.quantity_product));
 
                 currentRow.replaceWith(updateRow);
 
@@ -1248,43 +1922,86 @@
     }
 
     function doCreateProduct() {
-        $(".loader").removeClass("hide");
-        $("#btnCreateProduct").prop("disable", true);
-
         let formData = new FormData();
-        formData.append("product_id", $("#productTitleUpdate").val().toString());
-        formData.append("category_id", $("#categoryProductUpdate").val().toString());
-        formData.append("subcategory_id", $("#subcategoryProductUpdate").val().toString());
-        formData.append("description", $("#descriptionProductUpdate").val().toString());
-        formData.append("multipartFile", $("#imageFileUpdate")[0].files[0]);
-        $.ajax({
-            type: "POST",
-            contentType: false,
-            cache: false,
-            processData: false,
-            url: page.urls.doCreateProduct,
-            data: formData,
-        })
-            .done(function (data) {
-                product = data;
-                addRowProduct();
-                App.SweetAlert.showSuccessAlert("Create product successful!!!");
-                removeImage("#imageFileCreate", "#imagePreviewCreate");
-                $("#createProductModal").modal("hide");
+        formData.append("title", $("#productTitleCreate").val().toString());
+        formData.append("category_id", $("#categoryProductCreate").val().toString());
+        formData.append("subcategory_id", $("#subcategoryProductCreate").val().toString());
+        formData.append("description", $("#descriptionProductCreate").val().toString());
+        formData.append("multipartFile", $("#imageFileCreate")[0].files[0]);
+        if ($("#imageFileCreate")[0].files[0] == undefined) {
+
+            $(".loader").removeClass("hide");
+            $("#btnCreateProduct").prop("disable", true);
+
+            product.title = $("#productTitleCreate").val();
+            product.category_id = $("#categoryProductCreate").val();
+            product.subcategory_id = $("#subcategoryProductCreate").val();
+            product.description = $("#descriptionProductCreate").val();
+            $.ajax({
+                type: "POST",
+                headers: {
+                    "Content-Type": "Application/json",
+                    "Accept": "Application/json"
+                },
+                url: page.urls.doCreateProductNoImage,
+                data: JSON.stringify(product)
             })
-            .fail(function (jqXHR) {
-                console.log(jqXHR);
-                App.SweetAlert.showErrorAlert("Can not create new product");
+                .done(function (data) {
+                    product = data;
+
+                    addRowProduct();
+
+                    App.SweetAlert.showSuccessAlert("Create new product successful!!!");
+
+                    $("#createProductModal").modal("hide");
+
+
+                })
+                .fail(function (jqXHR) {
+
+                    console.log(jqXHR);
+
+                    removeImage("#imageFileCreate", "#imagePreviewCreate");
+
+                    App.SweetAlert.showErrorAlert("Can not create new product")
+
+                })
+                .always(function () {
+                    $(".loader").addClass("hide");
+                    $("#btnCreateProduct").prop("disable", false);
+                })
+        } else {
+            $(".loader").removeClass("hide");
+            $("#btnCreateProduct").prop("disable", true);
+            $.ajax({
+                type: "POST",
+                contentType: false,
+                cache: false,
+                processData: false,
+                url: page.urls.doCreateProduct,
+                data: formData,
             })
-            .always(function () {
-                $(".loader").addClass("hide");
-                $("#btnCreateProduct").prop("disable", false);
-            })
+                .done(function (data) {
+                    product = data;
+                    addRowProduct();
+                    App.SweetAlert.showSuccessAlert("Create product successful!!!");
+                    removeImage("#imageFileCreate", "#imagePreviewCreate");
+                    $("#createProductModal").modal("hide");
+                })
+                .fail(function (jqXHR) {
+                    console.log(jqXHR);
+                    App.SweetAlert.showErrorAlert("Can not create new product");
+                })
+                .always(function () {
+                    $(".loader").addClass("hide");
+                    $("#btnCreateProduct").prop("disable", false);
+                })
+        }
+
 
     }
 
     function doUpdateProduct() {
-
         let formData = new FormData();
         formData.append("title", $("#productTitleUpdate").val().toString());
         formData.append("category_id", $("#categoryProductUpdate").val().toString());
@@ -1386,9 +2103,33 @@
             })
     }
 
+    function doRestoreProduct(id) {
+        return $.ajax({
+            type: "PUT",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.doRestoreProduct + id
+        })
+            .done(function (data) {
+                product.id = data;
+
+                $("#tr_product_lock_" + product.id).remove();
+
+                App.IziToast.showSuccessAlert("Restore this product successful!!")
+            })
+            .fail(function (jqXHR) {
+                console.log(jqXHR);
+
+                App.SweetAlert.showErrorAlert("Can not restore this product!!!")
+            })
+    }
+
     function doCreateProductCombination() {
+
         $(".loader").removeClass("hide");
-        $("#btnCreateProduct").prop("disable", true);
+        $("#btnCreateProductCombination").prop("disable", true);
 
         let formData = new FormData();
         formData.append("product_title", $("#productCombinationTitleCreate").val().toString());
@@ -1398,30 +2139,149 @@
         formData.append("unit_price", $("#unitPriceCreate").val().toString());
         formData.append("total_stock", $("#quantityStockCreate").val().toString());
         formData.append("maximum_retail_price", $("#maximumRetailPriceCreate").val().toString());
-        formData.append("multipartFile", $("#imageFileCreate")[0].files[0]);
+        formData.append("multipartFile", $("#imageFileProductCombinationCreate")[0].files[0]);
+
+        if ($("#imageFileProductCombinationCreate")[0].files[0] == undefined) {
+
+            productsCombination.product_title = $("#productCombinationTitleCreate").val();
+            productsCombination.product_id = $("#productIdCreate").val();
+            productsCombination.color = $("#colorCreate").val();
+            productsCombination.size = $("#sizeCreate").val();
+            productsCombination.unit_price = $("#unitPriceCreate").val();
+            productsCombination.total_stock = $("#quantityStockCreate").val();
+            productsCombination.maximum_retail_price = $("#maximumRetailPriceCreate").val();
+
+            console.log("productCombination: " + productsCombination)
+            console.log($("#productCombinationTitleCreate").val());
+            console.log($("#unitPriceCreate").val());
+            console.log(productsCombination);
 
 
-        console.log("product id : " + product.id)
-        return $.ajax({
-            type: "POST",
-            contentType: false,
-            cache: false,
-            processData: false,
-            url: page.urls.doCreateProductCombination,
-            data: formData,
-        })
-        .done(function (data) {
-            productsCombination = data;
+            return $.ajax({
+                type: "POST",
+                headers: {
+                    "Content-Type": "Application/json",
+                    "Accept": "Application/json"
+                },
+                url: page.urls.doCreateProductCombinationNoImage,
+                data: JSON.stringify(productsCombination)
+            })
+                .done(function (data) {
 
-            addRowProductCombination();
+                    App.SweetAlert.showSuccessAlert("Create new variable successful!!!");
 
-            App.SweetAlert.showSuccessAlert("Create new variable successful !!!")
-        })
-        .fail(function (jqXHR) {
-            console.log(jqXHR);
+                    removeImage("#imageFileProductCombinationCreate", "#imagePreviewProductsCombinationCreate");
 
-            App.SweetAlert.showErrorAlert("Can not create!!!")
-        })
+                    $("#createProductsCombinationModal").modal("hide");
+                })
+                .fail(function (jqXHR) {
+                    console.log(jqXHR);
+
+                    App.SweetAlert.showErrorAlert("Can not create new variable")
+                })
+                .always(function () {
+                    $(".loader").addClass("hide");
+                    $("#btnCreateProductCombination").prop("disable", false);
+                })
+
+        } else {
+
+            return $.ajax({
+                type: "POST",
+                contentType: false,
+                cache: false,
+                processData: false,
+                url: page.urls.doCreateProductCombination,
+                data: formData,
+            })
+                .done(function (data) {
+                    productsCombination = data;
+
+                    // addRowProductCombination();
+
+                    App.SweetAlert.showSuccessAlert("Create new variable successful !!!");
+
+                    removeImage("#imageFileProductCombinationCreate", "#imagePreviewProductsCombinationCreate");
+
+                    $("#createProductsCombinationModal").modal("hide");
+                })
+                .fail(function (jqXHR) {
+                    console.log(jqXHR);
+
+                    App.SweetAlert.showErrorAlert("Can not create!!!")
+                })
+                .always(function () {
+                    $(".loader").addClass("hide");
+                    $("#btnCreateProductCombination").prop("disable", false);
+                })
+        }
+
+    }
+
+    function doUpdateProductCombination() {
+        $(".loader").removeClass("hide");
+        $("#btnUpdateProduct").prop("disable", true);
+
+        let formData = new FormData();
+        formData.append("product_title", $("#productCombinationTitleUpdate").val().toString());
+        formData.append("product_id", $("#productIdUpdate").val().toString());
+        formData.append("color", $("#colorUpdate").val().toString());
+        formData.append("size", $("#sizeUpdate").val().toString());
+        formData.append("unit_price", $("#unitPriceUpdate").val().toString());
+        formData.append("total_stock", $("#quantityStockUpdate").val().toString());
+        formData.append("maximum_retail_price", $("#maximumRetailPriceUpdate").val().toString());
+        formData.append("multipartFile", $("#imageFileProductCombinationUpdate")[0].files[0]);
+
+        if ($("#imageFileProductCombinationUpdate")[0].files[0] == undefined) {
+            let formDataNoImage = new FormData();
+            formDataNoImage.append("product_title", $("#productCombinationTitleUpdate").val().toString());
+            formDataNoImage.append("product_id", $("#productIdUpdate").val().toString());
+            formDataNoImage.append("color", $("#colorUpdate").val().toString());
+            formDataNoImage.append("size", $("#sizeUpdate").val().toString());
+            formDataNoImage.append("unit_price", $("#unitPriceUpdate").val().toString());
+            formDataNoImage.append("total_stock", $("#quantityStockUpdate").val().toString());
+            formDataNoImage.append("maximum_retail_price", $("#maximumRetailPriceUpdate").val().toString());
+            return $.ajax({
+                type: "PUT",
+                contentType: false,
+                cache: false,
+                processData: false,
+                url: page.urls.doUpdateProductCombinationNoImage + productsCombination.id,
+                data: formDataNoImage
+            })
+                .done(function (data) {
+                    productsCombination = data;
+
+                    let currentRow = $("#tr_product_combination_" + productsCombination.id);
+
+                    let image_thumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + productsCombination.fileFolder + "/" + productsCombination.fileName;
+
+                    let updateRow = $(tempProductsCombination(productsCombination.id, productsCombination.combination_string, productsCombination.product_title,
+                        productsCombination.total_stock, formatMoney(productsCombination.unit_price), formatMoney(productsCombination.maximum_retail_price), image_thumbnail));
+
+                    currentRow.replaceWith(updateRow);
+
+                    App.SweetAlert.showSuccessAlert("Update this variable successful!!!");
+
+                    removeImage();
+
+                    $("#updateProductsCombinationModal").modal("hide");
+
+                })
+                .fail(function (jqXHR) {
+                    console.log(jqXHR);
+
+                    App.SweetAlert.showErrorAlert("Can not update this variable");
+
+                })
+                .always(function () {
+                    $(".loader").addClass("hide");
+                    $("#btnUpdateProduct").prop("disable", false);
+                })
+
+        } else {
+
+        }
     }
 
     function resetModal(formElement) {
@@ -1448,6 +2308,9 @@
     closeModal("#createSubcategoryModal", "#frmCreateSubcategory");
 
     closeModal("#updateSubcategory", "#frmUpdateSubcategory");
+
+    closeModal("#createProductsCombinationModal", "#frmCreateProductCombination");
+
 
     $("#frmCreateProduct").validate({
         rules: {
@@ -1584,16 +2447,167 @@
 
     $("#frmCreateProductCombination").validate({
         rules: {
+            productCombinationTitleCreate: {
+                required: true
+            },
 
+            colorCreate: {
+                required: true
+            },
+
+            sizeCreate: {
+                required: true
+            },
+
+            unitPriceCreate: {
+                required: true,
+
+                min: 10000,
+
+                max: 100000000000
+            },
+
+            quantityStockCreate: {
+                required: true,
+
+                min: 0,
+
+                max: 1000000
+            },
+
+            maximumRetailPriceCreate: {
+                required: true,
+
+                min: 10000,
+
+                max: 100000000000
+            }
         },
 
         message: {
+            productCombinationTitleCreate: {
+                required: "This field can not empty"
+            },
 
+            colorCreate: {
+                required: "This field can not empty"
+            },
+
+            sizeCreate: {
+                required: "This field can not empty"
+            },
+
+            unitPriceCreate: {
+                required: "This field can not empty",
+
+                min: "The unit price min is 10 000 ",
+
+                max: "The unit price max is 100 000 000 000"
+            },
+
+            quantityStockCreate: {
+                required: "This field can not empty",
+
+                min: "The quantity min is 0",
+
+                max: "The quantity max is 1000000"
+            },
+
+            maximumRetailPriceCreate: {
+                required: "This field can not empty",
+
+                min: "The maximum retail price min is 10 000 ",
+
+                max: "The maximum retail price max is 100 000 000 000"
+            }
         },
 
         submitHandler: function () {
             doCreateProductCombination();
         }
+    })
+
+    $("#frmUpdateProductCombination").validate({
+        rules: {
+            productCombinationTitleUpdate: {
+                required: true
+            },
+
+            colorUpdate: {
+                required: true
+            },
+
+            sizeUpdate: {
+                required: true
+            },
+
+            unitPriceUpdate: {
+                required: true,
+
+                min: 10000,
+
+                max: 100000000000
+            },
+
+            quantityStockUpdate: {
+                required: true,
+
+                min: 0,
+
+                max: 1000000
+            },
+
+            maximumRetailPriceUpdate: {
+                required: true,
+
+                min: 10000,
+
+                max: 100000000000
+            }
+        },
+        message: {
+            productCombinationTitleUpdate: {
+                required: "This field can not empty"
+            },
+
+            colorUpdate: {
+                required: "This field can not empty"
+            },
+
+            sizeUpdate: {
+                required: "This field can not empty"
+            },
+
+            unitPriceUpdate: {
+                required: "This field can not empty",
+
+                min: "The unit price min is 10 000 ",
+
+                max: "The unit price max is 100 000 000 000"
+            },
+
+            quantityStockUpdate: {
+                required: "This field can not empty",
+
+                min: "The quantity min is 0",
+
+                max: "The quantity max is 1000000"
+            },
+
+            maximumRetailPriceUpdate: {
+                required: "This field can not empty",
+
+                min: "The maximum retail price min is 10 000 ",
+
+                max: "The maximum retail price max is 100 000 000 000"
+            }
+        },
+
+        submitHandler: function () {
+            doUpdateProductCombination();
+        }
+
+
     })
 
     $("#btnCreateProduct").on("click", function () {
@@ -1621,8 +2635,12 @@
         $("#frmUpdateSubcategory").submit();
     })
 
-    $("#btnCreateProductCombination").on("click", function() {
+    $("#btnCreateProductCombination").on("click", function () {
         $("#frmCreateProductCombination").submit();
+    })
+
+    $("#btnUpdateProductCombination").on("click", function () {
+        $("#frmUpdateProductCombination").submit();
     })
 
     function previewUploadImage(elementFileImage, elementImage) {
@@ -1655,6 +2673,15 @@
         })
     }
 
+    function handlePreviewProductCombinationCreate() {
+        $("#imageFileBtnProductsCombinationCreate").on("click", function () {
+            $("#imageFileProductCombinationCreate").click();
+            $("#imageFileProductCombinationCreate").on("change", function () {
+                previewUploadImage("#imageFileProductCombinationCreate", "#imagePreviewProductsCombinationCreate")
+            })
+        })
+    }
+
     function removeImage(elementFileImage, elementImage) {
         $(elementImage).attr("src", "#");
         $(elementFileImage).val("");
@@ -1672,6 +2699,58 @@
         })
     }
 
+    function handleRemoveImageProductCombinationCreate() {
+        $("#cancelImageProductsCombinationCreate").on("click", function () {
+            removeImage("#imageFileProductCombinationCreate", "#imagePreviewProductsCombinationCreate");
+        })
+    }
+
+    function findValueColor(product_combination, element) {
+        let arr = [];
+        arr = product_combination.split("_");
+        $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getColor
+        })
+            .done(function (data) {
+                data.forEach(item => {
+                    color = item;
+                    if (color.color_name == arr[0]) {
+                        $(element).val(color.id)
+                    }
+                })
+            })
+    }
+
+    function findValueSize(product_combination, element) {
+        let arr = [];
+        arr = product_combination.split("_");
+        $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            url: page.urls.getSize
+        })
+            .done(function (data) {
+                data.forEach(item => {
+                    size = item;
+                    if (size.size_name == arr[1]) {
+                        $(element).val(size.id);
+
+                    }
+                })
+            })
+    }
+
+    function formatMoney(money) {
+        return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(money)
+    }
 
     loadProduct().then(function () {
         handleGroupModal();

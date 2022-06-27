@@ -10,4 +10,10 @@ import java.util.Optional;
 public interface IProductsCombinationService extends IGeneralService<ProductsCombination> {
 
     Optional<ProductsCombinationClientDTO> createProductsCombination(ProductsCombinationDTO productsCombinationDTO);
+
+    ProductsCombinationClientDTO createProductsCombinationNoImage(ProductsCombinationDTO productsCombinationDTO);
+
+    Optional<ProductsCombinationClientDTO> updateProductCombinationNoImage(ProductsCombinationDTO productsCombinationDTO);
+
+    Optional<ProductsCombinationClientDTO> updateProductCombination(ProductsCombinationDTO productsCombinationDTO);
 }

@@ -99,13 +99,15 @@ class Subcategory {
 
 class ProductsCombination{
     constructor(id,product_id,product_title,product_combination_id,
-                combination_string,sku,fileName,fileFolder,fileUrl,
+                combination_string,color,size,sku,fileName,fileFolder,fileUrl,
                 cloudId,total_stock,available,sold,defective,unit_price,maximum_retail_price) {
         this.id = id;
         this.product_id = product_id;
         this.product_title = product_title;
         this.product_combination_id = product_combination_id;
         this.combination_string = combination_string;
+        this.color = color;
+        this.size = size;
         this.sku = sku;
         this.fileName = fileName;
         this.fileFolder = fileFolder;
